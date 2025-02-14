@@ -1,0 +1,5 @@
+output/
+
+# pixi environments
+.pixi
+*.egg-info

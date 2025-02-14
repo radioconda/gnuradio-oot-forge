@@ -1,0 +1,14 @@
+libboost_devel:
+  - '1.86'
+libboost_headers:
+  - '1.86'
+libboost_python_devel:
+  - '1.86'
+
+# needs to match length of zip {python, python_impl, numpy}
+# as it is in global CBC in order to override it
+numpy:
+  - 2.0
+  - 2.0
+  - 2.0
+  - 2.0

@@ -1,0 +1,154 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  oot_name: leo
+  name: ${{ "gnuradio-" + oot_name }}
+  version: "1.0.0.post20250214+g8f62b92"
+  build: "0"
+  python_min: ${{ python_min }}.*
+
+recipe:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+build:
+  number: ${{ build }}
+  skip: not (match(python, python_min) and is_abi3 == 'true')
+
+cache:
+  source:
+    - git: https://github.com/radioconda/gr-leo.git
+      rev: 8f62b92dd2fed042610e810b1c41ea7f6978262f
+    - git: https://github.com/dnwrnr/sgp4.git
+      rev: 147b1ae7cfbd5608ba78f4af29f6ba8e364e3b1b  # v1.0.post7
+      target_directory: sgp4
+
+  build:
+    script:
+      file: cache_build
+    files:
+      exclude:
+        - "**/gdk-pixbuf*"
+
+  requirements:
+    build:
+      - if: build_platform != target_platform
+        then:
+          - python
+          - cross-python_${{ target_platform }}
+          - numpy
+          - pybind11
+      - ${{ compiler("c") }}
+      - ${{ stdlib("c") }}
+      - ${{ compiler("cxx") }}
+      - cmake
+      - git
+      - ninja
+      - pkg-config
+    host:
+      - if: linux
+        then: gmp
+      - gnuradio-core
+      - libboost-headers
+      - if: win
+        then: pip
+      - pybind11
+      - python
+      - python-abi3
+      - numpy
+      - volk
+
+outputs:
+  - package:
+      name: ${{ name|lower }}-data
+    build:
+      string: ${{ "win" if win else "unix" }}_${{ build }}
+      noarch: generic
+      files:
+        include:
+          - ${{ "Library/" if win }}share/gr-leo/ITU_RREC*
+    requirements:
+      ignore_run_exports:
+        from_package:
+          - ${{ compiler("c")|split|first }}
+          - ${{ compiler("cxx")|split|first  }}
+          - gnuradio-core
+          - python
+          - python-abi3
+          - numpy
+          - volk
+      run:
+        - if: unix
+          then: __unix
+        - if: win
+          then: __win
+    tests:
+      - package_contents:
+          files:
+            - ${{ "Library/" if win }}share/gr-leo/ITU_RREC_P1511/TOPOLAT.txt
+            - ${{ "Library/" if win }}share/gr-leo/ITU_RREC_P837/LAT_R001.TXT
+            - ${{ "Library/" if win }}share/gr-leo/ITU_RREC_P839/Lat.txt
+
+  - package:
+      name: ${{ name|lower }}
+    build:
+      python:
+        version_independent: true
+      files:
+        exclude:
+          - ${{ "Library/" if win }}share/gr-leo/ITU_RREC*
+    requirements:
+      run:
+        - ${{ pin_subpackage('gnuradio-leo-data', exact=True) }}
+        - numpy
+        - python
+    tests:
+      - python:
+          imports:
+            - gnuradio.${{ oot_name }}
+          pip_check: false
+          python_version: ${{ python_min }}
+      - package_contents:
+          include:
+            - gnuradio/${{ oot_name }}/api.h
+          lib:
+            - ${{ name }}
+          files:
+            - ${{ "Library/" if win }}share/gnuradio/grc/blocks/leo_channel_model.block.yml
+            - ${{ "Library/" if win }}share/gnuradio/grc/blocks/variable_antenna.block.yml
+            - ${{ "Library/" if win }}share/gnuradio/grc/blocks/variable_leo_model_def.block.yml
+            - ${{ "Library/" if win }}share/gnuradio/grc/blocks/variable_satellite.block.yml
+            - ${{ "Library/" if win }}share/gnuradio/grc/blocks/variable_tracker.block.yml
+      - script:
+          - if: unix
+            then: |
+              leo_passpredict.py --help
+              grcc $PREFIX/share/gnuradio/examples/leo/leo_channel.grc
+          - if: win
+            then: |
+              leo_passpredict --help
+              grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\leo\\leo_channel.grc
+        requirements:
+          run:
+            - gnuradio-grc
+            - gnuradio-qtgui
+            - python ${{ python_min }}
+
+about:
+  homepage: https://gitlab.com/librespacefoundation/gr-leo
+  license: GPL-3.0-or-later AND Apache-2.0
+  license_file:
+    - LICENSE
+    - sgp4/LICENSE
+  summary: A GNU Radio space telecommunication simulator
+  description: >
+    Gr-leo is a GNU Radio Out-of-Tree module that simulates the
+    telecommunication channel between orbiting satellites and Ground Stations.
+
+    Example gnuradio-companion flowgraphs are installed with the package and
+    can be found in:
+        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/leo`
+        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\leo`
+
+extra:
+  recipe-maintainers:
+    - ryanvolz
