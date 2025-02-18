@@ -7,8 +7,8 @@ cd buildconda
 
 :: configure
 cmake -G "Ninja" %CMAKE_ARGS% ^
-    -DCMAKE_INSTALL_PREFIX="%PREFIX%\Library" ^
-    -DCMAKE_PREFIX_PATH="%PREFIX%\Library" ^
+    -DCMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%" ^
+    -DCMAKE_PREFIX_PATH="%LIBRARY_PREFIX%" ^
     -DCPM_sgp4_SOURCE="../sgp4" ^
     -DGR_PYTHON_DIR:PATH="%SP_DIR%" ^
     -DENABLE_DOXYGEN=OFF ^
