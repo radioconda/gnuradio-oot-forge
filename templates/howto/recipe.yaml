@@ -70,9 +70,6 @@ tests:
         # GRC blocks
 #        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/howto.block.yml
   - script:
-      # Verify that commands run
-#      - COMMAND --help
-
       # Verify that example flowgraphs can be generated
 #      - if: unix
 #        then: |
@@ -80,6 +77,9 @@ tests:
 #      - if: win
 #        then: |
 #          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\howto\\howto.grc
+
+      # Verify that commands run
+#      - COMMAND --help
     requirements:
       run:
         - python ${{ python_min }}
