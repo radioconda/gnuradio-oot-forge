@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  oot_name: howto
+  name: ${{ "gnuradio-" + oot_name }}
+  version: "0.0.0.20250101.dev+gGITHASH"
+  build: "0"
+  python_min: ${{ python_min }}.*
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  git: https://github.com/radioconda/gr-howto.git
+  rev: e6c8b2997371830cce03c0a8a05b6f0526b4efa4
+
+build:
+  number: ${{ build }}
+  skip: not (match(python, python_min) and is_abi3 == 'true')
+  python:
+    version_independent: true
+  files:
+    exclude:
+      - "**/gdk-pixbuf*"
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - numpy
+        - pybind11
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake
+    - git
+    - ninja
+    - pkg-config
+  host:
+    - gnuradio-core
+    - libboost-headers
+    - if: win
+      then: pip
+    - pybind11
+    - python
+    - python-abi3
+    - numpy
+    - volk
+  run:
+    - numpy
+    - python
+
+tests:
+  - python:
+      imports:
+        - gnuradio.${{ oot_name }}
+      pip_check: false
+      python_version: ${{ python_min }}
+  - package_contents:
+      include:
+        - gnuradio/${{ oot_name }}/api.h
+      lib:
+        - ${{ name }}
+      files:
+        # Example flowgraphs
+#        - ${{ "Library/" if win }}share/gnuradio/examples/howto/howto.grc
+
+        # GRC blocks
+#        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/howto.block.yml
+  - script:
+      # Verify that commands run
+#      - COMMAND --help
+
+      # Verify that example flowgraphs can be generated
+#      - if: unix
+#        then: |
+#          grcc $PREFIX/share/gnuradio/examples/howto/howto.grc
+#      - if: win
+#        then: |
+#          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\howto\\howto.grc
+    requirements:
+      run:
+        - python ${{ python_min }}
+
+about:
+#  homepage: https://github.com/radioconda/gr-howto
+#  license: GPL-3.0-or-later
+#  license_file: LICENSE
+#  summary: GNU Radio howto module
+#  description: >
+#    Short description of the gr-howto module.
+#
+#    Example gnuradio-companion flowgraphs are installed with the package and
+#    can be found in:
+#        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/howto`
+#        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\howto`
+
+extra:
+  recipe-maintainers:
+#    - ryanvolz
