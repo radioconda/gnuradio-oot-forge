@@ -122,11 +122,13 @@ outputs:
           - if: unix
             then: |
               grcc $PREFIX/share/gnuradio/examples/leo/leo_channel.grc
+              rm leo_channel.py
               leo_passpredict.py --help
               ls
           - if: win
             then: |
               grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\leo\\leo_channel.grc
+              rm leo_channel.py
               leo_passpredict --help
               dir
         requirements:
