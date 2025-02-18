@@ -29,8 +29,8 @@ cmd = [
     "build",
     "--experimental",
     "--recipe-dir=recipes",
-    "--channel=conda-forge",
-    "--channel=gnuradio-oot-forge",
+    "--channel=https://prefix.dev/conda-forge",
+    "--channel=https://prefix.dev/gnuradio-oot-forge",
     "--variant-config=$CONDA_PREFIX/conda_build_config.yaml",
     "--variant-config=recipes/variants.yaml",
 ]
