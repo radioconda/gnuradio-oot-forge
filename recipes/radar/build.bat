@@ -7,7 +7,7 @@ cd buildconda
 
 :: configure
 cmake -G "Ninja" %CMAKE_ARGS% ^
-    -DGR_PYTHON_DIR:PATH="%SP_DIR%" ^
+    -DGR_PYTHON_DIR="%SP_DIR%" ^
     -DENABLE_DOXYGEN=OFF ^
     -DENABLE_TESTING=ON ^
     ..
