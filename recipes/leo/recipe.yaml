@@ -12,7 +12,7 @@ recipe:
 
 build:
   number: ${{ build }}
-  skip: not (match(python, python_min) and is_abi3 == 'true')
+  skip: not (match(python, python_min) and is_abi3)
 
 cache:
   source:
