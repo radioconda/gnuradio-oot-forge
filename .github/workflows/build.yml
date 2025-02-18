@@ -41,7 +41,7 @@ jobs:
       - name: Build packages
         shell: bash
         run: |
-          pixi run build --verbose --skip-existing=all --target-platform=${{ matrix.target }}
+          pixi run build --skip-existing=all --target-platform=${{ matrix.target }}
 
       - name: Upload all packages
         shell: bash
