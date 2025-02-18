@@ -48,7 +48,14 @@ jobs:
         # do not upload on PR
         if: github.event_name == 'push'
         run: |
-          # uses trusted publishers for the upload
-          for file in output/**/*.conda; do
-            rattler-build upload prefix -c gnuradio-oot-forge "$file"
+          shopt -s nullglob
+          EXIT_CODE=0
+          for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
+            if ! rattler-build upload prefix -c gnuradio-oot-forge "${pkg}"; then
+              EXIT_CODE=1
+            fi
+            if ! rattler-build upload anaconda -o ryanvolz "${pkg}"; then
+              EXIT_CODE=1
+            fi
           done
+          exit $EXIT_CODE
