@@ -121,12 +121,12 @@ outputs:
       - script:
           - if: unix
             then: |
-              leo_passpredict.py --help
               grcc $PREFIX/share/gnuradio/examples/leo/leo_channel.grc
+              leo_passpredict.py --help
           - if: win
             then: |
-              leo_passpredict --help
               grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\leo\\leo_channel.grc
+              leo_passpredict --help
         requirements:
           run:
             - gnuradio-grc
