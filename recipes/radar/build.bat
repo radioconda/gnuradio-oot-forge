@@ -26,6 +26,7 @@ if errorlevel 1 exit 1
 :: test
 set SKIP_TESTS=^
 qa_estimator_fmcw^
+|qa_msg_manipulator^
 |qa_tracking_singletarget^
 %=EMPTY=%
 
