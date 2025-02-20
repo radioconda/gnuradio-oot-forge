@@ -44,6 +44,15 @@ jobs:
           pixi run build --skip-existing=all --target-platform=${{ matrix.target }}
           ls output/**/*.conda
 
+      - name: Store artifacts
+        uses: actions/upload-artifacts@v4
+        with:
+          name: pkgs-${{ github.run_id }}-${{ matrix.target }}
+          path: output/**/*.conda
+          if-no-files-found: ignore
+          retention-days: 7
+        continue-on-error: true
+
       - name: Upload all packages
         shell: bash
         # do not upload on PR
