@@ -4,7 +4,6 @@ context:
   name: ${{ "gnuradio-" + oot_name }}
   version: "0.0.0.20250218.dev+ge6c8b29"
   build: "0"
-  python_min: ${{ python_min }}.*
 
 package:
   name: ${{ name|lower }}
@@ -16,9 +15,6 @@ source:
 
 build:
   number: ${{ build }}
-  skip: not (match(python, python_min) and is_abi3)
-  python:
-    version_independent: true
   files:
     exclude:
       - "**/gdk-pixbuf*"
@@ -49,7 +45,6 @@ requirements:
     - pybind11
     - pyqt
     - python
-    - python-abi3
     - qt-main
     - qwt
     - numpy
@@ -71,7 +66,6 @@ tests:
       imports:
         - gnuradio.${{ oot_name }}
       pip_check: false
-      python_version: ${{ python_min }}
   - package_contents:
       include:
         - gnuradio/${{ oot_name }}/api.h
@@ -110,7 +104,6 @@ tests:
     #requirements:
       #run:
         #- gnuradio-grc
-        #- python ${{ python_min }}
 
 about:
   homepage: https://github.com/kit-cel/gr-radar
