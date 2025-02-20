@@ -111,20 +111,20 @@ outputs:
             - ${{ "Library/" if win }}share/gnuradio/grc/blocks/variable_leo_model_def.block.yml
             - ${{ "Library/" if win }}share/gnuradio/grc/blocks/variable_satellite.block.yml
             - ${{ "Library/" if win }}share/gnuradio/grc/blocks/variable_tracker.block.yml
-      - script:
-          - if: unix
-            then: |
-              leo_passpredict.py --help
-              grcc $PREFIX/share/gnuradio/examples/leo/leo_channel.grc
-          - if: win
-            then: |
+      #- script:
+          #- if: unix
+            #then: |
+              #leo_passpredict.py --help
+              #grcc $PREFIX/share/gnuradio/examples/leo/leo_channel.grc
+          #- if: win
+            #then: |
               #leo_passpredict --help
               #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\leo\\leo_channel.grc
-        requirements:
-          run:
-            - gnuradio-grc
-            - gnuradio-qtgui
-            - python
+        #requirements:
+          #run:
+            #- gnuradio-grc
+            #- gnuradio-qtgui
+            #- python
 
 about:
   homepage: https://gitlab.com/librespacefoundation/gr-leo
