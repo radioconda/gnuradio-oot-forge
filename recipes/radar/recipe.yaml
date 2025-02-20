@@ -2,7 +2,7 @@
 context:
   oot_name: radar
   name: ${{ "gnuradio-" + oot_name }}
-  version: "0.0.0.20250218.dev+ge6c8b29"
+  version: "0.0.0.20250220.dev+g92adce2"
   build: "0"
 
 package:
@@ -11,7 +11,7 @@ package:
 
 source:
   git: https://github.com/radioconda/gr-radar.git
-  rev: e6c8b2997371830cce03c0a8a05b6f0526b4efa4
+  rev: 92adce2fa65c4a24888ecca8e6f9db2a71c5c014
 
 build:
   number: ${{ build }}
