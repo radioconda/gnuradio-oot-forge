@@ -42,6 +42,7 @@ jobs:
         shell: bash
         run: |
           pixi run build --skip-existing=all --target-platform=${{ matrix.target }}
+          ls output/**/*.conda
 
       - name: Upload all packages
         shell: bash
