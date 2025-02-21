@@ -59,35 +59,6 @@ cache:
 
 outputs:
   - package:
-      name: ${{ name|lower }}-data
-    build:
-      string: ${{ "win" if win else "unix" }}_${{ build }}
-      noarch: generic
-      files:
-        include:
-          - ${{ "Library/" if win }}share/gr-leo/ITU_RREC*
-    requirements:
-      ignore_run_exports:
-        from_package:
-          - ${{ compiler("c")|split|first }}
-          - ${{ compiler("cxx")|split|first  }}
-          - gnuradio-core
-          - python
-          - numpy
-          - volk
-      run:
-        - if: unix
-          then: __unix
-        - if: win
-          then: __win
-    tests:
-      - package_contents:
-          files:
-            - ${{ "Library/" if win }}share/gr-leo/ITU_RREC_P1511/TOPOLAT.txt
-            - ${{ "Library/" if win }}share/gr-leo/ITU_RREC_P837/LAT_R001.TXT
-            - ${{ "Library/" if win }}share/gr-leo/ITU_RREC_P839/Lat.txt
-
-  - package:
       name: ${{ name|lower }}
     build:
       files:
@@ -128,6 +99,35 @@ outputs:
             #- gnuradio-grc
             #- gnuradio-qtgui
             #- python
+
+  - package:
+      name: ${{ name|lower }}-data
+    build:
+      string: ${{ "win" if win else "unix" }}_${{ build }}
+      noarch: generic
+      files:
+        include:
+          - ${{ "Library/" if win }}share/gr-leo/ITU_RREC*
+    requirements:
+      ignore_run_exports:
+        from_package:
+          - ${{ compiler("c")|split|first }}
+          - ${{ compiler("cxx")|split|first  }}
+          - gnuradio-core
+          - python
+          - numpy
+          - volk
+      run:
+        - if: unix
+          then: __unix
+        - if: win
+          then: __win
+    tests:
+      - package_contents:
+          files:
+            - ${{ "Library/" if win }}share/gr-leo/ITU_RREC_P1511/TOPOLAT.txt
+            - ${{ "Library/" if win }}share/gr-leo/ITU_RREC_P837/LAT_R001.TXT
+            - ${{ "Library/" if win }}share/gr-leo/ITU_RREC_P839/Lat.txt
 
 about:
   homepage: https://gitlab.com/librespacefoundation/gr-leo
