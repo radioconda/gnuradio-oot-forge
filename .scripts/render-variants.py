@@ -2,14 +2,13 @@ import argparse
 import collections
 import json
 import os
-import shutil
-import sys
 import subprocess
 import tempfile
 import tomllib
 from pathlib import Path
 
 import yaml
+
 
 def collapse_variant_matrix(variants):
     unique_keys = set()
@@ -42,6 +41,7 @@ def collapse_variant_matrix(variants):
 
     return collapsed_variant
 
+
 def combine_platform_variants(platform_variants):
     unique_keys = set()
     unique_keys.update(*tuple(set(v.keys()) for v in platform_variants.values()))
@@ -62,13 +62,16 @@ def combine_platform_variants(platform_variants):
             # platforms have different values, or some platforms don't have the key
             selector_vals = []
             for k, value in platform_vals.items():
-                selector_vals.append({
-                    "if": f"target_platform == '{k}'",
-                    "then": value,
-                })
+                selector_vals.append(
+                    {
+                        "if": f"target_platform == '{k}'",
+                        "then": value,
+                    }
+                )
             combined_variant[key] = selector_vals
 
     return combined_variant
+
 
 def render_variants(recipe_path, target_platforms):
     """Render variants for recipe from conda-forge-pinning and local file."""
@@ -85,16 +88,20 @@ def render_variants(recipe_path, target_platforms):
     ]
     global_variants = recipe_path.parent.parent / "variants.yaml"
     if global_variants.exists():
-        base_run_args.extend([
-            "--variant-config",
-            str(global_variants),
-        ])
+        base_run_args.extend(
+            [
+                "--variant-config",
+                str(global_variants),
+            ]
+        )
     recipe_variants = recipe_path.parent / "recipe_variants.yaml"
     if recipe_variants.exists():
-        base_run_args.extend([
-            "--variant-config",
-            str(recipe_variants),
-        ])
+        base_run_args.extend(
+            [
+                "--variant-config",
+                str(recipe_variants),
+            ]
+        )
     platform_variants = {}
     for target_platform in target_platforms:
         run_args = base_run_args + [
@@ -124,21 +131,8 @@ def render_variants(recipe_path, target_platforms):
     del combined_variant["target_platform"]
     variant_path.write_text(yaml.safe_dump(combined_variant))
 
-    #variants_dir = recipe_path.parent / ".variants"
-    #if variants_dir.exists():
-        #for varfile in variants_dir.glob("*.yaml"):
-            #varfile.unlink()
-    #else:
-        #variants_dir.mkdir()
-
-    #for target_platform, variant in platform_variants.items():
-        #variant_path = variants_dir / f"{target_platform}.yaml"
-        ## remove special variant keys that are not read from the config file
-        #del variant["build_platform"]
-        #del variant["target_platform"]
-        #variant_path.write_text(yaml.safe_dump(variant))
-
     print(f"Rendered variants for: {recipe_path}")
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -173,12 +167,13 @@ def main():
 
     target_platforms = manifest["project"]["platforms"]
 
-    for recipe_path in recipe_dir.glob('**/recipe.yaml'):
+    for recipe_path in recipe_dir.glob("**/recipe.yaml"):
         try:
             render_variants(recipe_path, target_platforms)
         except Exception as e:
             print(f"Error processing {recipe_path}: {e}")
             raise e
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
