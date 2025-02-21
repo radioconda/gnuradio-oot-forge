@@ -18,6 +18,7 @@ build:
   files:
     exclude:
       - "**/gdk-pixbuf*"
+      - "**/*.pyc"
 
 requirements:
   build:

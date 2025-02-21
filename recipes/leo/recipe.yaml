@@ -26,6 +26,7 @@ cache:
     files:
       exclude:
         - "**/gdk-pixbuf*"
+        - "**/*.pyc"
 
   requirements:
     build:
