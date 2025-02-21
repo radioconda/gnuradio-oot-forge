@@ -58,6 +58,8 @@ jobs:
         shell: bash
         # do not upload on PR
         if: github.event_name == 'push'
+        env:
+          ANACONDA_API_KEY: ${{ secrets.ANACONDA_API_KEY }}
         run: |
           shopt -s nullglob
           EXIT_CODE=0
