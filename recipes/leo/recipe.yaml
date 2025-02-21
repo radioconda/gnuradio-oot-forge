@@ -26,9 +26,9 @@ outputs:
       script:
         interpreter: nu
         content: |
-          cmake -E copy_directory data/ITU_RREC_P1511 $env.PREFIX/${{ "Library/" if win }}share/gr-leo/ITU_RREC_P1511
-          cmake -E copy_directory data/ITU_RREC_P837 $env.PREFIX/${{ "Library/" if win }}share/gr-leo/ITU_RREC_P837
-          cmake -E copy_directory data/ITU_RREC_P839 $env.PREFIX/${{ "Library/" if win }}share/gr-leo/ITU_RREC_P839
+          cmake -E copy_directory data/ITU_RREC_P1511 ($env.PREFIX)/${{ "Library/" if win }}share/gr-leo/ITU_RREC_P1511
+          cmake -E copy_directory data/ITU_RREC_P837 ($env.PREFIX)/${{ "Library/" if win }}share/gr-leo/ITU_RREC_P837
+          cmake -E copy_directory data/ITU_RREC_P839 ($env.PREFIX)/${{ "Library/" if win }}share/gr-leo/ITU_RREC_P839
     requirements:
       build:
         - cmake
