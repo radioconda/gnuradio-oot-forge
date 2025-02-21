@@ -4,7 +4,6 @@ context:
   name: ${{ "gnuradio-" + oot_name }}
   version: "0.0.0.20250101.dev+gGITHASH"
   build: "0"
-  python_min: ${{ python_min }}.*
 
 package:
   name: ${{ name|lower }}
@@ -16,12 +15,10 @@ source:
 
 build:
   number: ${{ build }}
-  skip: not (match(python, python_min) and is_abi3 == 'true')
-  python:
-    version_independent: true
   files:
     exclude:
       - "**/gdk-pixbuf*"
+      - "**/*.pyc"
 
 requirements:
   build:
@@ -45,7 +42,6 @@ requirements:
       then: pip
     - pybind11
     - python
-    - python-abi3
     - numpy
     - volk
   run:
@@ -57,7 +53,6 @@ tests:
       imports:
         - gnuradio.${{ oot_name }}
       pip_check: false
-      python_version: ${{ python_min }}
   - package_contents:
       include:
         - gnuradio/${{ oot_name }}/api.h
@@ -70,9 +65,6 @@ tests:
         # GRC blocks
 #        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/howto.block.yml
   - script:
-      # Verify that commands run
-#      - COMMAND --help
-
       # Verify that example flowgraphs can be generated
 #      - if: unix
 #        then: |
@@ -80,9 +72,12 @@ tests:
 #      - if: win
 #        then: |
 #          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\howto\\howto.grc
+
+      # Verify that commands run
+#      - COMMAND --help
     requirements:
       run:
-        - python ${{ python_min }}
+        - python
 
 about:
 #  homepage: https://github.com/radioconda/gr-howto

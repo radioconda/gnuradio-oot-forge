@@ -10,18 +10,6 @@ version = "0.1.0"
 
 [dependencies]
 rattler-build = ">=0.36.0,<0.37"
-conda-forge-pinning = ">=2025.2.18.15.16.45,<2026"
-
-[feature.update-versions.dependencies]
-python = "*"
-requests = "*"
-pyyaml = "*"
-
-[feature.update-versions.tasks]
-update-versions = "python .scripts/update-versions.py"
-
-[environments]
-update-versions = ["update-versions"]
 
 [tasks.build]
 cmd = [
@@ -29,13 +17,46 @@ cmd = [
     "build",
     "--experimental",
     "--recipe-dir=recipes",
-    "--channel=conda-forge",
-    "--channel=gnuradio-oot-forge",
-    "--variant-config=$CONDA_PREFIX/conda_build_config.yaml",
-    "--variant-config=recipes/variants.yaml",
+    "--channel=https://prefix.dev/conda-forge",
+    "--channel=https://prefix.dev/gnuradio-oot-forge",
 ]
 inputs = ["recipes/**/*"]
 outputs = ["output/**/*.conda", "output/**/repodata.json"]
 
 [tasks.clean]
 cmd = ["rm", "-rf", "output/bld", "output/src_cache"]
+
+[feature.conda-forge-pinning.dependencies]
+conda-forge-pinning = "*"
+
+[feature.conda-forge-pinning.tasks]
+render-variants = "python .scripts/render-variants.py"
+
+[feature.lint.dependencies]
+actionlint = ">=1.7.7,<2"
+pre-commit = ">=4.1.0,<5"
+pre-commit-hooks = ">=5.0.0,<6"
+ruff = ">=0.9.7,<0.10"
+
+[feature.lint.tasks]
+actionlint = { cmd = "actionlint", env = { SHELLCHECK_OPTS = "-e SC2086" } }
+lint = "pre-commit run --all-files --hook-stage=manual"
+pre-commit-install = "pre-commit install --install-hooks"
+pre-commit-run = "pre-commit run --all-files"
+ruff-format = "ruff format --force-exclude"
+ruff-lint = "ruff check --fix --exit-non-zero-on-fix --force-exclude"
+
+[feature.recipe.dependencies]
+python = ">=3.11"
+pyyaml = "*"
+
+[feature.update-versions.dependencies]
+requests = "*"
+
+[feature.update-versions.tasks]
+update-versions = "python .scripts/update-versions.py"
+
+[environments]
+lint = {features = ["lint"], no-default-feature=true}
+render-variants = ["recipe", "conda-forge-pinning"]
+update-versions = ["recipe", "update-versions"]

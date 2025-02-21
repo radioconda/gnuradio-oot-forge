@@ -1,3 +1,6 @@
+channel_targets:
+  - gnuradio-oot-forge main
+
 libboost_devel:
   - '1.86'
 libboost_headers:

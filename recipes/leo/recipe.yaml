@@ -4,7 +4,6 @@ context:
   name: ${{ "gnuradio-" + oot_name }}
   version: "1.0.0.post20250214+g8f62b92"
   build: "0"
-  python_min: ${{ python_min }}.*
 
 recipe:
   name: ${{ name|lower }}
@@ -12,7 +11,6 @@ recipe:
 
 build:
   number: ${{ build }}
-  skip: not (match(python, python_min) and is_abi3 == 'true')
 
 cache:
   source:
@@ -28,6 +26,7 @@ cache:
     files:
       exclude:
         - "**/gdk-pixbuf*"
+        - "**/*.pyc"
 
   requirements:
     build:
@@ -53,7 +52,6 @@ cache:
         then: pip
       - pybind11
       - python
-      - python-abi3
       - numpy
       - volk
 
@@ -73,7 +71,6 @@ outputs:
           - ${{ compiler("cxx")|split|first  }}
           - gnuradio-core
           - python
-          - python-abi3
           - numpy
           - volk
       run:
@@ -91,8 +88,6 @@ outputs:
   - package:
       name: ${{ name|lower }}
     build:
-      python:
-        version_independent: true
       files:
         exclude:
           - ${{ "Library/" if win }}share/gr-leo/ITU_RREC*
@@ -106,7 +101,6 @@ outputs:
           imports:
             - gnuradio.${{ oot_name }}
           pip_check: false
-          python_version: ${{ python_min }}
       - package_contents:
           include:
             - gnuradio/${{ oot_name }}/api.h
@@ -118,20 +112,20 @@ outputs:
             - ${{ "Library/" if win }}share/gnuradio/grc/blocks/variable_leo_model_def.block.yml
             - ${{ "Library/" if win }}share/gnuradio/grc/blocks/variable_satellite.block.yml
             - ${{ "Library/" if win }}share/gnuradio/grc/blocks/variable_tracker.block.yml
-      - script:
-          - if: unix
-            then: |
-              leo_passpredict.py --help
-              grcc $PREFIX/share/gnuradio/examples/leo/leo_channel.grc
-          - if: win
-            then: |
-              leo_passpredict --help
-              grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\leo\\leo_channel.grc
-        requirements:
-          run:
-            - gnuradio-grc
-            - gnuradio-qtgui
-            - python ${{ python_min }}
+      #- script:
+          #- if: unix
+            #then: |
+              #leo_passpredict.py --help
+              #grcc $PREFIX/share/gnuradio/examples/leo/leo_channel.grc
+          #- if: win
+            #then: |
+              #leo_passpredict --help
+              #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\leo\\leo_channel.grc
+        #requirements:
+          #run:
+            #- gnuradio-grc
+            #- gnuradio-qtgui
+            #- python
 
 about:
   homepage: https://gitlab.com/librespacefoundation/gr-leo

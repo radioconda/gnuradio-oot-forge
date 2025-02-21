@@ -41,14 +41,31 @@ jobs:
       - name: Build packages
         shell: bash
         run: |
-          pixi run build --skip-existing=all --target-platform=${{ matrix.target }}
+          pixi run --frozen build --skip-existing=all --target-platform=${{ matrix.target }}
+          ls output/**/*.conda
+
+      - name: Store artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pkgs-${{ github.run_id }}-${{ matrix.target }}
+          path: output/**/*.conda
+          if-no-files-found: ignore
+          retention-days: 7
+        continue-on-error: true
 
       - name: Upload all packages
         shell: bash
         # do not upload on PR
         if: github.event_name == 'push'
         run: |
-          # uses trusted publishers for the upload
-          for file in output/**/*.conda; do
-            rattler-build upload prefix -c gnuradio-oot-forge "$file"
+          shopt -s nullglob
+          EXIT_CODE=0
+          for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
+            if ! rattler-build upload prefix -c gnuradio-oot-forge "${pkg}"; then
+              EXIT_CODE=1
+            fi
+            if ! rattler-build upload anaconda -o ryanvolz "${pkg}"; then
+              EXIT_CODE=1
+            fi
           done
+          exit $EXIT_CODE

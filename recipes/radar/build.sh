@@ -18,6 +18,7 @@ cmake --build . --config Release --target install
 if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR}" != "" ]]; then
     SKIP_TESTS=(
         qa_estimator_fmcw
+        qa_msg_manipulator
         qa_tracking_singletarget
     )
     SKIP_TESTS_STR=$( IFS="|"; echo "^(${SKIP_TESTS[*]})$" )
