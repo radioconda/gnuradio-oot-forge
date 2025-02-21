@@ -31,7 +31,7 @@ outputs:
           import shutil
 
           src_dirs = pathlib.Path("data").glob("ITU_RREC*")
-          dest_dir = pathlib.Path(os.env["PREFIX"]) / "${{ "Library/" if win }}share/gr-leo"
+          dest_dir = pathlib.Path(os.environ["PREFIX"]) / "${{ "Library/" if win }}share/gr-leo"
 
           dest_dir.mkdir(parents=True, exist_ok=True)
           for src_dir in src_dirs:
