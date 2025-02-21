@@ -37,7 +37,7 @@ requirements:
     - pkg-config
   host:
     - gnuradio-core
-    - libboost-headers
+    - libboost-devel
     - if: win
       then: pip
     - pybind11
@@ -47,6 +47,10 @@ requirements:
   run:
     - numpy
     - python
+  ignore_run_exports:
+    from_package:
+      # this only builds against the headers
+      - libboost-devel
 
 tests:
   - python:

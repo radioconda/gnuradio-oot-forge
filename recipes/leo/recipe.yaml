@@ -3,7 +3,7 @@ context:
   oot_name: leo
   name: ${{ "gnuradio-" + oot_name }}
   version: "1.0.0.post20250214+g8f62b92"
-  build: "0"
+  build: "1"
 
 recipe:
   name: ${{ name|lower }}
@@ -44,16 +44,18 @@ cache:
       - ninja
       - pkg-config
     host:
-      - if: linux
-        then: gmp
       - gnuradio-core
-      - libboost-headers
+      - libboost-devel
       - if: win
         then: pip
       - pybind11
       - python
       - numpy
       - volk
+    ignore_run_exports:
+      from_package:
+        # this only builds against the headers
+        - libboost-devel
 
 outputs:
   - package:
