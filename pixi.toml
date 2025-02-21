@@ -11,26 +11,6 @@ version = "0.1.0"
 [dependencies]
 rattler-build = ">=0.36.0,<0.37"
 
-[feature.recipe.dependencies]
-python = ">=3.11"
-pyyaml = "*"
-
-[feature.conda-forge-pinning.dependencies]
-conda-forge-pinning = "*"
-
-[feature.conda-forge-pinning.tasks]
-render-variants = "python .scripts/render-variants.py"
-
-[feature.update-versions.dependencies]
-requests = "*"
-
-[feature.update-versions.tasks]
-update-versions = "python .scripts/update-versions.py"
-
-[environments]
-render-variants = ["recipe", "conda-forge-pinning"]
-update-versions = ["recipe", "update-versions"]
-
 [tasks.build]
 cmd = [
     "rattler-build",
@@ -45,3 +25,38 @@ outputs = ["output/**/*.conda", "output/**/repodata.json"]
 
 [tasks.clean]
 cmd = ["rm", "-rf", "output/bld", "output/src_cache"]
+
+[feature.conda-forge-pinning.dependencies]
+conda-forge-pinning = "*"
+
+[feature.conda-forge-pinning.tasks]
+render-variants = "python .scripts/render-variants.py"
+
+[feature.lint.dependencies]
+actionlint = ">=1.7.7,<2"
+pre-commit = ">=4.1.0,<5"
+pre-commit-hooks = ">=5.0.0,<6"
+ruff = ">=0.9.7,<0.10"
+
+[feature.lint.tasks]
+actionlint = { cmd = "actionlint", env = { SHELLCHECK_OPTS = "-e SC2086" } }
+lint = "pre-commit run --all-files --hook-stage=manual"
+pre-commit-install = "pre-commit install --install-hooks"
+pre-commit-run = "pre-commit run --all-files"
+ruff-format = "ruff format --force-exclude"
+ruff-lint = "ruff check --fix --exit-non-zero-on-fix --force-exclude"
+
+[feature.recipe.dependencies]
+python = ">=3.11"
+pyyaml = "*"
+
+[feature.update-versions.dependencies]
+requests = "*"
+
+[feature.update-versions.tasks]
+update-versions = "python .scripts/update-versions.py"
+
+[environments]
+lint = {features = ["lint"], no-default-feature=true}
+render-variants = ["recipe", "conda-forge-pinning"]
+update-versions = ["recipe", "update-versions"]
