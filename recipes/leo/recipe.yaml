@@ -9,72 +9,26 @@ recipe:
   name: ${{ name|lower }}
   version: ${{ version }}
 
-build:
-  number: ${{ build }}
-
-cache:
-  source:
-    - git: https://github.com/radioconda/gr-leo.git
-      rev: 8f62b92dd2fed042610e810b1c41ea7f6978262f
-    - git: https://github.com/dnwrnr/sgp4.git
-      rev: 147b1ae7cfbd5608ba78f4af29f6ba8e364e3b1b  # v1.0.post7
-      target_directory: sgp4
-
-  build:
-    script:
-      file: cache_build
-    files:
-      exclude:
-        - "**/gdk-pixbuf*"
-        - "**/*.pyc"
-
-  requirements:
-    build:
-      - if: build_platform != target_platform
-        then:
-          - python
-          - cross-python_${{ target_platform }}
-          - numpy
-          - pybind11
-      - ${{ compiler("c") }}
-      - ${{ stdlib("c") }}
-      - ${{ compiler("cxx") }}
-      - cmake
-      - git
-      - ninja
-      - pkg-config
-    host:
-      - gnuradio-core
-      - libboost-devel
-      - if: win
-        then: pip
-      - pybind11
-      - python
-      - numpy
-      - volk
-    ignore_run_exports:
-      from_package:
-        # this only builds against the headers
-        - libboost-devel
+source:
+  - git: https://github.com/radioconda/gr-leo.git
+    rev: 8f62b92dd2fed042610e810b1c41ea7f6978262f
+  - git: https://github.com/dnwrnr/sgp4.git
+    rev: 147b1ae7cfbd5608ba78f4af29f6ba8e364e3b1b  # v1.0.post7
+    target_directory: sgp4
 
 outputs:
   - package:
       name: ${{ name|lower }}-data
     build:
+      number: ${{ build }}
       string: ${{ "win" if win else "unix" }}_${{ build }}
       noarch: generic
-      files:
-        include:
-          - ${{ "Library/" if win }}share/gr-leo/ITU_RREC*
+      script:
+        content: |
+          cmake -E copy_directory data/ITU_RREC_P1511 data/ITU_RREC_P837 data/ITU_RREC_P839 $PREFIX/${{ "Library/" if win }}share/gr-leo/
     requirements:
-      ignore_run_exports:
-        from_package:
-          - ${{ compiler("c")|split|first }}
-          - ${{ compiler("cxx")|split|first  }}
-          - gnuradio-core
-          - python
-          - numpy
-          - volk
+      build:
+        - cmake
       run:
         - if: unix
           then: __unix
@@ -90,14 +44,46 @@ outputs:
   - package:
       name: ${{ name|lower }}
     build:
+      number: ${{ build }}
+      script:
+        file: build
       files:
         exclude:
+          - "**/gdk-pixbuf*"
+          - "**/*.pyc"
           - ${{ "Library/" if win }}share/gr-leo/ITU_RREC*
     requirements:
+      build:
+        - if: build_platform != target_platform
+          then:
+            - python
+            - cross-python_${{ target_platform }}
+            - numpy
+            - pybind11
+        - ${{ compiler("c") }}
+        - ${{ stdlib("c") }}
+        - ${{ compiler("cxx") }}
+        - cmake
+        - git
+        - ninja
+        - pkg-config
+      host:
+        - gnuradio-core
+        - libboost-devel
+        - if: win
+          then: pip
+        - pybind11
+        - python
+        - numpy
+        - volk
       run:
         - ${{ pin_subpackage('gnuradio-leo-data', exact=True) }}
         - numpy
         - python
+      ignore_run_exports:
+        from_package:
+          # this only builds against the headers
+          - libboost-devel
     tests:
       - python:
           imports:
