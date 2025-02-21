@@ -41,7 +41,7 @@ jobs:
       - name: Build packages
         shell: bash
         run: |
-          pixi run build --skip-existing=all --target-platform=${{ matrix.target }}
+          pixi run --frozen build --skip-existing=all --target-platform=${{ matrix.target }}
           ls output/**/*.conda
 
       - name: Store artifacts
