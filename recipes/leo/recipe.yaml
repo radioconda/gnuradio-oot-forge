@@ -24,6 +24,7 @@ outputs:
       string: ${{ "win" if win else "unix" }}_${{ build }}
       noarch: generic
       script:
+        interpreter: nu
         content: |
           cmake -E copy_directory data/ITU_RREC_P1511 $PREFIX/${{ "Library/" if win }}share/gr-leo/ITU_RREC_P1511
           cmake -E copy_directory data/ITU_RREC_P837 $PREFIX/${{ "Library/" if win }}share/gr-leo/ITU_RREC_P837
@@ -31,6 +32,7 @@ outputs:
     requirements:
       build:
         - cmake
+        - nushell
       run:
         - if: unix
           then: __unix
