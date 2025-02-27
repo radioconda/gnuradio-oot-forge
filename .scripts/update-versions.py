@@ -129,6 +129,7 @@ def main():
         except Exception as e:
             print(f"Error processing {recipe_path}: {e}")
 
+    summary = ""
     if diffs:
         summary_lines = [
             "",
@@ -142,8 +143,8 @@ def main():
         summary = "\n".join(summary_lines)
         print(summary)
 
-        if args.summary_output is not None:
-            args.summary_output.write_text(summary)
+    if args.summary_output is not None:
+        args.summary_output.write_text(summary)
 
 
 if __name__ == "__main__":

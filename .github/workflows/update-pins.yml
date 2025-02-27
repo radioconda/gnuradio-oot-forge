@@ -6,7 +6,7 @@ on:
     - cron: 0 5 * * *
 
 jobs:
-  update:
+  update-pins:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/create-github-app-token@v1
