@@ -51,7 +51,8 @@ python = ">=3.11"
 pyyaml = "*"
 
 [feature.update-versions.dependencies]
-requests = "*"
+gitpython = "*"
+setuptools_scm = "*"
 
 [feature.update-versions.tasks]
 update-versions = "python .scripts/update-versions.py"

@@ -1,117 +1,134 @@
-import os
-import sys
+import argparse
+import difflib
+import tempfile
 import yaml
-import requests
 from pathlib import Path
-import hashlib
+
+import git
+import setuptools_scm
 
 
-def get_github_latest_release(repo: str, package_name: str):
-    """Get latest release version from GitHub."""
-    api_url = f"https://api.github.com/repos/{repo}/releases/latest"
-
-    # Use GitHub token if available
-    token = os.getenv("GITHUB_TOKEN")
-    headers = {}
-    if token:
-        headers["Authorization"] = f"token {token}"
-
-    response = requests.get(api_url, headers=headers)
-    if response.status_code == 200:
-        tag_name = response.json()["tag_name"]
-
-        if tag_name.startswith(package_name):
-            tag_name = tag_name[len(package_name) + 1 :]
-        if tag_name.startswith("v"):
-            tag_name = tag_name[1:]
-
-        return tag_name
-    return None
+def get_latest_git_rev(git_url: str, branch_name: str):
+    """Get latest revision of a branch on a remote Git repository."""
+    git_cmd = git.cmd.Git()
+    ls_remote_result = git_cmd.ls_remote(git_url, branch_name)
+    rev, commit_id = ls_remote_result.split()
+    return rev
 
 
-def calculate_sha256(url):
-    """Download file and calculate SHA256."""
-    response = requests.get(url, stream=True)
-    if response.status_code == 200:
-        sha256_hash = hashlib.sha256()
-        for chunk in response.iter_content(chunk_size=8192):
-            sha256_hash.update(chunk)
-        return sha256_hash.hexdigest()
-    return None
-
-
-def replace_version_string(content, new_version):
-    """Replace first occurrence of version in content, line by line."""
-    lines = content.splitlines()
+def replace_context(recipe_str, new_context_line):
+    """Replace context line in recipe_str."""
+    variable, value = new_context_line.strip().split(": ")
+    lines = recipe_str.splitlines()
     for i, line in enumerate(lines):
-        if line.strip().startswith("version:"):
+        if line.strip().startswith(f"{variable}:"):
             # Keep the leading whitespace
-            whitespace = line[: line.index("version:")]
-            lines[i] = f'{whitespace}version: "{new_version}"'
+            whitespace = line[: line.index(f"{variable}:")]
+            lines[i] = f"{whitespace}{new_context_line}"
             break
     return "\n".join(lines)
 
 
 def update_recipe(recipe_path):
     """Update version and hash in recipe file."""
+    print(f"Checking package {recipe_path.parent.name} for updates")
+
     with open(recipe_path) as f:
         recipe = yaml.safe_load(f)
 
-    current_version = recipe["context"]["version"]
-    source_url = recipe["source"]["url"]
-    old_hash = recipe["source"]["sha256"]
-    package_name = recipe["package"]["name"]
+    try:
+        git_url = recipe["context"]["git_url"]
+        current_git_rev = recipe["context"]["git_rev"]
+    except KeyError:
+        print("Recipe does not use `git_url` or `git_rev`, skipping")
+        return
+    git_branch = recipe["context"].get("git_branch", "HEAD")
+    current_base_version = recipe["context"].get("base_version", None)
+    current_date_str = recipe["context"].get("date_str", None)
+    current_build = recipe["context"].get("build", None)
 
-    # Determine package source (GitHub or PyPI)
-    if "github.com" in source_url:
-        # Extract owner/repo from GitHub URL
-        repo = "/".join(source_url.split("github.com/")[1].split("/")[0:2])
-        new_version = get_github_latest_release(repo, package_name)
-    else:
-        print(f"Unsupported source URL format: {source_url}")
+    latest_git_rev = get_latest_git_rev(git_url, git_branch)
+
+    if latest_git_rev == current_git_rev:
         return
 
-    if not new_version:
-        print(f"Could not fetch new version for {recipe_path}")
-        return
-
-    if new_version == current_version:
-        print(f"Already at latest version: {current_version}")
-        return
-
-    print(f"Checking package {recipe['package']['name']} for updates")
-    print(f"Current version: {current_version}, Latest version: {new_version}")
-    # Update URL and calculate new hash
-    new_url = source_url.replace("${{ version }}", new_version)
-    new_hash = calculate_sha256(new_url)
-
-    if not new_hash:
-        print(f"Failed to calculate new hash for {recipe_path}")
-        return
+    # rev has changed, clone to temporary directory to get more information
+    with tempfile.TemporaryDirectory(suffix=".git") as tempdir:
+        repo = git.Repo.clone_from(git_url, tempdir, branch=git_branch, bare=True)
+        latest_date_str = repo.head.commit.committed_datetime.strftime("%Y%m%d")
+        try:
+            latest_prior_tag = repo.git.describe(latest_git_rev, tags=True, abbrev=0)
+        except git.GitCommandError:
+            latest_base_version = "0.0.0"
+        else:
+            config = setuptools_scm.Configuration()
+            parsed_version = setuptools_scm.version.tag_to_version(
+                latest_prior_tag, config
+            )
+            latest_base_version = str(parsed_version)
 
     # Update recipe as a string replace because we want to keep all YAML formatting
-    recipe_str = recipe_path.read_text()
-    recipe_str = replace_version_string(recipe_str, new_version)
-    recipe_str = recipe_str.replace(old_hash, new_hash)
+    orig_recipe_str = recipe_path.read_text()
+    recipe_str = replace_context(orig_recipe_str, f"git_rev: {latest_git_rev}")
+    recipe_str = replace_context(recipe_str, f'date_str: "{latest_date_str}"')
+    recipe_str = replace_context(recipe_str, f'base_version: "{latest_base_version}"')
+    if (current_base_version == latest_base_version) and (
+        current_date_str == latest_date_str
+    ):
+        # if base_version and date_str didn't change but rev did, increment build
+        recipe_str = replace_context(recipe_str, f'build: "{int(current_build) + 1}"')
+    else:
+        # reset build to 0
+        recipe_str = replace_context(recipe_str, 'build: "0"')
+    # restore trailing newline if it was there before
+    if orig_recipe_str.endswith("\n"):
+        recipe_str += "\n"
 
     # Save updated recipe
-    recipe_path.write_text(recipe_str.strip())
+    recipe_path.write_text(recipe_str)
 
-    print(f"Updated {recipe_path}: {current_version} -> {new_version}")
+    # Get diff to return for printing
+    name = f"{recipe_path.parent.name}/{recipe_path.name}"
+    diff_lines = difflib.unified_diff(
+        orig_recipe_str.splitlines(),
+        recipe_str.splitlines(),
+        fromfile=f"{name}.orig",
+        tofile=name,
+        n=0,
+        lineterm="",
+    )
+    diff = "\n".join(diff_lines)
+
+    print(f"Updated {recipe_path}")
+    return diff
 
 
 def main():
-    recipe_dir = Path(".")
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "recipe_dir",
+        nargs="?",
+        default=Path("recipes"),
+        type=Path,
+    )
+    args = parser.parse_args()
 
-    # take first arg from cli and use as recipe_dir
-    if len(sys.argv) > 1:
-        recipe_dir = Path(sys.argv[1])
+    recipe_dir = args.recipe_dir.resolve()
 
-    for recipe_file in recipe_dir.glob("**/recipe.yaml"):
+    diffs = []
+    for recipe_path in recipe_dir.glob("**/recipe.yaml"):
         try:
-            update_recipe(recipe_file)
+            diff = update_recipe(recipe_path)
+            if diff is not None:
+                diffs.append(diff)
         except Exception as e:
-            print(f"Error processing {recipe_file}: {e}")
+            print(f"Error processing {recipe_path}: {e}")
+
+    if diffs:
+        print("\n**********   Summary of updates   **********")
+        for diff in diffs:
+            print("")
+            print(diff)
 
 
 if __name__ == "__main__":
