@@ -1,8 +1,15 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
   oot_name: radar
-  name: ${{ "gnuradio-" + oot_name }}
-  version: "0.0.0.20250220.dev+g92adce2"
+  name: gnuradio-${{ oot_name }}
+  # update script relies on `git_url` and `git_branch` and can replace:
+  #   `git_rev`, `base_version`, `date_str`, `build`
+  git_url: https://github.com/radioconda/gr-radar.git
+  git_branch: updates
+  git_rev: 92adce2fa65c4a24888ecca8e6f9db2a71c5c014
+  base_version: "0.0.0"
+  date_str: "20250220"
+  version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
   build: "0"
 
 package:
@@ -10,8 +17,8 @@ package:
   version: ${{ version }}
 
 source:
-  git: https://github.com/radioconda/gr-radar.git
-  rev: 92adce2fa65c4a24888ecca8e6f9db2a71c5c014
+  git: ${{ git_url }}
+  rev: ${{ git_rev }}
 
 build:
   number: ${{ build }}
