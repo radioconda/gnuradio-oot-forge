@@ -172,7 +172,6 @@ def main():
             render_variants(recipe_path, target_platforms)
         except Exception as e:
             print(f"Error processing {recipe_path}: {e}")
-            raise e
 
 
 if __name__ == "__main__":

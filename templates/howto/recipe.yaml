@@ -1,8 +1,15 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
   oot_name: howto
-  name: ${{ "gnuradio-" + oot_name }}
-  version: "0.0.0.20250101.dev+gGITHASH"
+  name: gnuradio-${{ oot_name }}
+  # update script relies on `git_url` and `git_branch` and can replace:
+  #   `git_rev`, `base_version`, `date_str`, `build`
+  git_url: https://github.com/radioconda/gr-howto.git
+  git_branch: main
+  git_rev: e6c8b2997371830cce03c0a8a05b6f0526b4efa4
+  base_version: "0.0.0"
+  date_str: "20250101"
+  version: ${{ base_version }}.post${{ date_str }}+g${{ git_rev[:7] }}
   build: "0"
 
 package:
@@ -10,8 +17,8 @@ package:
   version: ${{ version }}
 
 source:
-  git: https://github.com/radioconda/gr-howto.git
-  rev: e6c8b2997371830cce03c0a8a05b6f0526b4efa4
+  git: ${{ git_url }}
+  rev: ${{ git_rev }}
 
 build:
   number: ${{ build }}

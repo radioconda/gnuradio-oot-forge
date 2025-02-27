@@ -1,0 +1,40 @@
+name: Update package versions
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 6 * * *
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: generate-token
+        with:
+          app-id: ${{ secrets.RADIOCONDA_PRBOT_APP_ID }}
+          private-key: ${{ secrets.RADIOCONDA_PRBOT_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v4
+
+      - uses: prefix-dev/setup-pixi@v0.8.3
+        with:
+          run-install: false
+
+      - name: Update package versions
+        run: |
+          pixi run update-versions --summary-output update.md
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          commit-message: Update packages to latest revisions
+          title: Update packages to latest revisions
+          body-path: update.md
+          branch: update-versions
+          base: main
+          labels: update-versions
+          delete-branch: true
+          add-paths: |
+            recipes/**/recipe.yaml
