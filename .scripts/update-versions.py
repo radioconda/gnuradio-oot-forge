@@ -111,6 +111,11 @@ def main():
         default=Path("recipes"),
         type=Path,
     )
+    parser.add_argument(
+        "--summary-output",
+        dest="summary_output",
+        type=Path,
+    )
     args = parser.parse_args()
 
     recipe_dir = args.recipe_dir.resolve()
@@ -125,10 +130,20 @@ def main():
             print(f"Error processing {recipe_path}: {e}")
 
     if diffs:
-        print("\n**********   Summary of updates   **********")
+        summary_lines = [
+            "",
+            "Summary of updates",
+            "------------------",
+        ]
         for diff in diffs:
-            print("")
-            print(diff)
+            summary_lines.append("```diff")
+            summary_lines.append(diff)
+            summary_lines.append("```")
+        summary = "\n".join(summary_lines)
+        print(summary)
+
+        if args.summary_output is not None:
+            args.summary_output.write_text(summary)
 
 
 if __name__ == "__main__":
