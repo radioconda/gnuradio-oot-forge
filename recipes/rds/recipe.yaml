@@ -1,0 +1,115 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  oot_name: rds
+  name: gnuradio-${{ oot_name }}
+  # update script relies on `git_url` and `git_branch` and can replace:
+  #   `git_rev`, `base_version`, `date_str`, `build`
+#  git_url: https://github.com/bastibl/gr-rds
+#  git_branch: maint-3.10
+  git_url: https://github.com/radioconda/gr-rds
+  git_branch: updates
+  git_rev: 676ba8074d2ed0add8180091105cbe6564c558fd
+  base_version: "3.10"
+  date_str: "20250303"
+  version: ${{ base_version }}.post${{ date_str }}+g${{ git_rev[:7] }}
+  build: "0"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  git: ${{ git_url }}
+  rev: ${{ git_rev }}
+
+build:
+  number: ${{ build }}
+  files:
+    exclude:
+      - "**/gdk-pixbuf*"
+      - "**/*.pyc"
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - numpy
+        - pybind11
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake
+    - git
+    - ninja
+    - pkg-config
+  host:
+    - gnuradio-core
+    - libboost-devel
+    - if: win
+      then: pip
+    - pybind11
+    - python
+    - numpy
+  run:
+    - numpy
+    - pyqt
+    - python
+
+tests:
+  - python:
+      imports:
+        - ${{ oot_name }}
+      pip_check: false
+  - package_contents:
+      include:
+        - ${{ oot_name }}/api.h
+      lib:
+        - ${{ name }}
+      files:
+        # Example flowgraphs
+       - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/rds_rx.grc
+       - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/rds_tx.grc
+
+        # GRC blocks
+       - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_decoder.block.yml
+       - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_encoder.block.yml
+       - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_panel.block.yml
+       - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_parser.block.yml
+  #- script:
+      ## Verify that example flowgraphs can be generated
+     #- if: unix
+       #then: |
+         #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/rds_rx.grc
+         #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/rds_tx.grc
+     #- if: win
+       #then: |
+         #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\rds_rx.grc
+         #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\rds_tx.grc
+    #requirements:
+      #run:
+        #- gnuradio-grc
+        #- gnuradio-osmosdr
+        #- gnuradio-qtgui
+        #- gnuradio-uhd
+        #- python
+
+about:
+ homepage: https://github.com/bastibl/gr-rds
+ license: GPL-3.0-or-later
+ license_file: COPYING
+ summary: GNU Radio module for an FM RDS/TMC Transceiver
+ description: >
+    A Radio Data System - Traffic Message Channel (RDS-TMC) module for GNU
+    Radio. RDS is a communications protocol standard for embedding small
+    amounts of digital information in conventional FM radio broadcasts.
+
+    Example gnuradio-companion flowgraphs are installed with the package and
+    can be found in:
+       - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/rds`
+       - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\rds`
+
+extra:
+  recipe-maintainers:
+   - ryanvolz

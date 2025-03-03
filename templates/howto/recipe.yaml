@@ -71,18 +71,18 @@ tests:
         - ${{ name }}
       files:
         # Example flowgraphs
-#        - ${{ "Library/" if win }}share/gnuradio/examples/howto/howto.grc
+#        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/howto.grc
 
         # GRC blocks
-#        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/howto.block.yml
+#        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_example.block.yml
   - script:
       # Verify that example flowgraphs can be generated
 #      - if: unix
 #        then: |
-#          grcc $PREFIX/share/gnuradio/examples/howto/howto.grc
+#          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/howto.grc
 #      - if: win
 #        then: |
-#          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\howto\\howto.grc
+#          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\howto.grc
 
       # Verify that commands run
 #      - COMMAND --help
@@ -100,8 +100,8 @@ about:
 #
 #    Example gnuradio-companion flowgraphs are installed with the package and
 #    can be found in:
-#        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/howto`
-#        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\howto`
+#        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/${{ oot_name }}`
+#        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\${{ oot_name }}`
 
 extra:
   recipe-maintainers:
