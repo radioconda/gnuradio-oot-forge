@@ -88,7 +88,7 @@ tests:
 #      - COMMAND --help
     requirements:
       run:
-        - python
+#        - gnuradio-grc
 
 about:
 #  homepage: https://github.com/radioconda/gr-howto

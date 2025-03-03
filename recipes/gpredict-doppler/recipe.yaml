@@ -89,8 +89,9 @@ tests:
          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\gpredict_doppler\\test_doppler.grc
     requirements:
       run:
+        - gnuradio-grc
         - gnuradio-qtgui
-        - python
+        - python ${{ python_min }}.*
 
 about:
   homepage: https://github.com/ghostop14/gr-gpredict-doppler
