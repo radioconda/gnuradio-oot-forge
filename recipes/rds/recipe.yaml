@@ -54,6 +54,7 @@ requirements:
     - numpy
   run:
     - numpy
+    - pyqt
     - python
 
 tests:
@@ -88,6 +89,10 @@ tests:
          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\rds_tx.grc
     requirements:
       run:
+        - gnuradio-grc
+        - gnuradio-osmosdr
+        - gnuradio-qtgui
+        - gnuradio-uhd
         - python
 
 about:
