@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  oot_name: paint
+  name: gnuradio-${{ oot_name }}
+  # update script relies on `git_url` and `git_branch` and can replace:
+  #   `git_rev`, `base_version`, `date_str`, `build`
+  git_url: https://github.com/radioconda/gr-paint.git
+  git_branch: updates
+  git_rev: c23135482ac5626d1a8ee9855397bf9be890b9fa
+  base_version: "0.0.0"
+  date_str: "20250303"
+  version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
+  build: "0"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  git: ${{ git_url }}
+  rev: ${{ git_rev }}
+
+build:
+  number: ${{ build }}
+  files:
+    exclude:
+      - "**/gdk-pixbuf*"
+      - "**/*.pyc"
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - numpy
+        - pybind11
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake
+    - git
+    - ninja
+    - pkg-config
+  host:
+    - gnuradio-core
+    - if: win
+      then: pip
+    - pybind11
+    - python
+    - numpy
+    - volk
+  run:
+    - numpy
+    - pillow
+    - python
+
+tests:
+  - python:
+      imports:
+        - gnuradio.${{ oot_name }}
+      pip_check: false
+  - package_contents:
+      include:
+        - gnuradio/${{ oot_name }}/api.h
+      lib:
+        - ${{ name }}
+      files:
+        # GRC blocks
+       - ${{ "Library/" if win }}share/gnuradio/grc/blocks/paint_image_source.block.yml
+       - ${{ "Library/" if win }}share/gnuradio/grc/blocks/paint_paint_bc.block.yml
+
+about:
+ homepage: https://github.com/drmpeg/gr-paint
+ license: GPL-3.0-or-later
+ license_file: COPYING
+ summary: GNU Radio module for OFDM spectrum painting
+ description: >
+   The goal of this project is to build a software-defined OFDM transmitter
+   that "paints" monochrome images into the waterfall of a receiver.
+   It is based on https://github.com/polygon/spectrum_painter.
+
+   After installation, a GNU Radio block called "Spectrum Painter" will
+   be available in the "Paint" category. The block converts a byte stream
+   of image data into a 4K IFFT OFDM IQ sequence for transmission.
+
+extra:
+  recipe-maintainers:
+    - ryanvolz
