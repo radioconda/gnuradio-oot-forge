@@ -65,7 +65,7 @@ requirements:
 tests:
   - python:
       imports:
-        - gpredict_doppler
+        - gpredict
       pip_check: false
   - package_contents:
       files:
