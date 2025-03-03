@@ -13,31 +13,65 @@ import yaml
 def collapse_variant_matrix(variants):
     unique_keys = set()
     unique_keys.update(*tuple(set(v.keys()) for v in variants))
+    # remove special variant keys that are not read from the config file
+    unique_keys.discard("build_platform")
+    unique_keys.discard("target_platform")
+    for key in unique_keys.copy():
+        if key.startswith("__"):
+            unique_keys.discard(key)
 
-    combined_variant = collections.defaultdict(list)
+    # find values common to all variants
+    common_keys = unique_keys.copy()
+    common_values = {}
     for variant in variants:
-        # ignore noarch variants because they don't arise from the variant config
-        if variant["target_platform"] == "noarch":
-            continue
-        for key in unique_keys:
-            combined_variant[key].append(variant.get(key, ""))
+        for key, val in variant.items():
+            if key not in common_keys:
+                continue
+            if key not in common_values:
+                common_values[key] = val
+            elif common_values[key] != val:
+                common_keys.discard(key)
+                common_values.pop(key)
 
-    collapsed_variant = {}
-    zip_keys = []
-    for key, val in combined_variant.items():
-        s = set(val)
-        s.discard("")
-        if len(s) == 0:
-            # key not actually needed, probably from noarch variant
-            continue
-        elif len(s) == 1:
-            collapsed_variant[key] = s.pop()
+    # convert variant dictionaries to sets of (key, value) tuples
+    # and reduce the variants by combining those that are subsets/supersets
+    common_variant_set = set((k, v) for k, v in common_values.items())
+    variant_sets = []
+    for variant in variants:
+        variant_set = common_variant_set.copy()
+        for key, val in variant.items():
+            if key not in unique_keys:
+                continue
+            variant_set.add((key, val))
+
+        # join with existing variants when subset/superset otherwise add to list
+        for existing_variant_set in variant_sets:
+            if variant_set.issubset(existing_variant_set):
+                break
+            elif variant_set.issuperset(existing_variant_set):
+                existing_variant_set.update(variant_set)
+                break
         else:
-            collapsed_variant[key] = tuple(val)
-            zip_keys.append(key)
+            variant_sets.append(variant_set)
+
+    # get the keys for unique values and the values unique to each variant
+    zip_keys = set()
+    unique_variants = []
+    for variant_set in variant_sets:
+        unique_variant_set = variant_set - common_variant_set
+        unique_variant = collections.defaultdict(lambda: "")
+        for k, v in unique_variant_set:
+            zip_keys.add(k)
+            unique_variant[k] = v
+        unique_variants.append(unique_variant)
+
+    # collapse into a single dict with tuple values for the unique keys
+    collapsed_variant = common_values.copy()
+    for key in zip_keys:
+        collapsed_variant[key] = tuple(uv[key] for uv in unique_variants)
 
     if len(zip_keys) > 1:
-        collapsed_variant["zip_keys"] = zip_keys
+        collapsed_variant["zip_keys"] = tuple(zip_keys)
 
     return collapsed_variant
 
@@ -126,9 +160,6 @@ def render_variants(recipe_path, target_platforms):
     variant_path = recipe_path.parent / "variants.yaml"
     if variant_path.exists():
         variant_path.unlink()
-    # remove special variant keys that are not read from the config file
-    combined_variant.pop("build_platform", None)
-    combined_variant.pop("target_platform", None)
     variant_path.write_text(yaml.safe_dump(combined_variant))
 
     print(f"Rendered variants for: {recipe_path}")
