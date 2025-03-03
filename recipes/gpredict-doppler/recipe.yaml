@@ -73,12 +73,12 @@ tests:
         - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/test_doppler.grc
 
         # GRC blocks
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict_PairToVar.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict_VarToMsg.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict_azel_limit.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict_doppler.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict_rotor.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict_vel_doppler.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_gpredict_PairToVar.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_gpredict_VarToMsg.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_gpredict_azel_limit.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_gpredict_doppler.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_gpredict_rotor.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_gpredict_vel_doppler.block.yml
   - script:
       # Verify that example flowgraphs can be generated
      - if: unix
