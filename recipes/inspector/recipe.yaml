@@ -6,7 +6,7 @@ context:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/radioconda/gr-inspector.git
   git_branch: updates
-  git_rev: 60b0bbf4b4a1f5d2e80919a8052b97026604874d
+  git_rev: 57e1ba1d5be9be13863b1d9222121cea62542421
   base_version: "0.0.0"
   date_str: "20250303"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
