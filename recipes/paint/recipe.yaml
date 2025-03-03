@@ -63,11 +63,11 @@ requirements:
 tests:
   - python:
       imports:
-        - gnuradio.${{ oot_name }}
+        - ${{ oot_name }}
       pip_check: false
   - package_contents:
       include:
-        - gnuradio/${{ oot_name }}/api.h
+        - ${{ oot_name }}/api.h
       lib:
         - ${{ name }}
       files:
