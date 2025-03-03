@@ -4,11 +4,13 @@ context:
   name: gnuradio-${{ oot_name }}
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
-  git_url: https://github.com/bastibl/gr-rds
-  git_branch: maint-3.10
-  git_rev: cf9ffb0b2d082fc47ad70269143a310a53814618
+#  git_url: https://github.com/bastibl/gr-rds
+#  git_branch: maint-3.10
+  git_url: https://github.com/radioconda/gr-rds
+  git_branch: updates
+  git_rev: 81937db164d6ecea075d304a316d80b79aa395e3
   base_version: "3.10"
-  date_str: "20250302"
+  date_str: "20250303"
   version: ${{ base_version }}.post${{ date_str }}+g${{ git_rev[:7] }}
   build: "0"
 
