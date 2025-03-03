@@ -53,9 +53,9 @@ requirements:
     - pybind11
     - pyqt
     - python
+    - numpy
     - qt-main
     - qwt
-    - numpy
     - volk
     - uhd
     # for tests run during build step
