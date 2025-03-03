@@ -70,7 +70,7 @@ tests:
   - package_contents:
       files:
         # Example flowgraphs
-        - ${{ "Library/" if win }}share/gnuradio/examples/gpredict_dippler/test_doppler.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/gpredict_doppler/test_doppler.grc
 
         # GRC blocks
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_gpredict_PairToVar.block.yml
