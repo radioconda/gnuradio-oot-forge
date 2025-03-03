@@ -127,8 +127,8 @@ def render_variants(recipe_path, target_platforms):
     if variant_path.exists():
         variant_path.unlink()
     # remove special variant keys that are not read from the config file
-    del combined_variant["build_platform"]
-    del combined_variant["target_platform"]
+    combined_variant.pop("build_platform", None)
+    combined_variant.pop("target_platform", None)
     variant_path.write_text(yaml.safe_dump(combined_variant))
 
     print(f"Rendered variants for: {recipe_path}")

@@ -1,0 +1,112 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  oot_name: gpredict-doppler
+  name: gnuradio-${{ oot_name }}
+  # update script relies on `git_url` and `git_branch` and can replace:
+  #   `git_rev`, `base_version`, `date_str`, `build`
+  git_url: https://github.com/radioconda/gr-gpredict-doppler.git
+  git_branch: updates
+  git_rev: 9473cbf6b9b38d29e4c41d6fa76025d6e95f0d1a
+  base_version: "0.0.0"
+  date_str: "20250303"
+  version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
+  build: "0"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  git: ${{ git_url }}
+  rev: ${{ git_rev }}
+
+build:
+  number: ${{ build }}
+  string: ${{ "win" if win else "unix" }}_pyh${{ hash }}_${{ build }}
+  noarch: python
+  files:
+    exclude:
+      - "**/gdk-pixbuf*"
+      - "**/*.pyc"
+
+requirements:
+  build:
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake
+    - git
+    - ninja
+    - pkg-config
+  host:
+    - gnuradio-core
+    - libboost-devel
+    - if: win
+      then: pip
+    - python ${{ python_min }}.*
+  run:
+    - if: unix
+      then: __unix
+    - if: win
+      then: __win
+    # Need gnuradio as a run dep because noarch doesn't do run_exports.
+    # This pin can be more relaxed than the gnuradio run_exports because the
+    # API is stable at the 'x.x' level and we don't need to worry about ABI.
+    - ${{ pin_compatible('gnuradio-core', lower_bound='x.x', upper_bound='x.x') }}
+    - python >=${{ python_min }}
+  ignore_run_exports:
+    from_package:
+      - ${{ compiler("c")|split|first }}
+      - ${{ stdlib("c")|split|first }}
+      - ${{ compiler("cxx")|split|first }}
+      # this only builds against the headers
+      - libboost-devel
+
+tests:
+  - python:
+      imports:
+        - ${{ oot_name }}
+      pip_check: false
+  - package_contents:
+      files:
+        # Example flowgraphs
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/test_doppler.grc
+
+        # GRC blocks
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict_PairToVar.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict_VarToMsg.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict_azel_limit.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict_doppler.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict_rotor.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict_vel_doppler.block.yml
+  - script:
+      # Verify that example flowgraphs can be generated
+     - if: unix
+       then: |
+         grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/test_doppler.grc
+     - if: win
+       then: |
+         grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\test_doppler.grc
+    requirements:
+      run:
+        - gnuradio-qtgui
+        - python
+
+about:
+  homepage: https://github.com/ghostop14/gr-gpredict-doppler
+  license: GPL-3.0-or-later
+  license_file: LICENSE
+  summary: GNU Radio Gpredict Doppler shift correction block
+  description: >
+    Python block that updates a GNU Radio variable with the absolute frequency
+    as provided by Gpredict. This allows for Doppler shift corrected reception
+    of satellite signals.
+
+    Example gnuradio-companion flowgraphs are installed with the package and
+    can be found in:
+        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/${{ oot_name }}`
+        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\${{ oot_name }}`
+
+extra:
+  recipe-maintainers:
+    - ryanvolz
