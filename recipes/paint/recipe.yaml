@@ -6,7 +6,7 @@ context:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/radioconda/gr-paint.git
   git_branch: updates
-  git_rev: c23135482ac5626d1a8ee9855397bf9be890b9fa
+  git_rev: fb4f7b6f65ec2e069e896e2444db8d8f171b3e9d
   base_version: "0.0.0"
   date_str: "20250303"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
