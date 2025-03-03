@@ -22,20 +22,8 @@ source:
 
 build:
   number: ${{ build }}
-  string: ${{ "win" if win else "unix" }}_pyh${{ hash }}_${{ build }}
+  string: ${{ "win" if win else "unix" }}_py_${{ build }}
   noarch: python
-  variant:
-    ignore_keys:
-      - if: osx
-        then: MACOSX_DEPLOYMENT_TARGET
-      - c_compiler
-      - c_compiler_version
-      - c_stdlib
-      - c_stdlib_version
-      - cxx_compiler
-      - cxx_compiler_version
-      - gnuradio_core
-      - libboost_devel
   files:
     exclude:
       - "**/gdk-pixbuf*"
