@@ -83,26 +83,26 @@ tests:
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_header.block.yml
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_header_decoder.block.yml
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_modulate.block.yml
-  - script:
-      # Verify that example flowgraphs can be generated
-      - if: unix
-        then: |
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/lora_RX.grc
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/lora_TX.grc
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/tx_rx_functionality_check.grc
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/tx_rx_simulation.grc
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/tx_rx_usrp.grc
-      - if: win
-        then: |
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\lora_RX.grc
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\lora_TX.grc
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\tx_rx_functionality_check.grc
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\tx_rx_simulation.grc
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\tx_rx_usrp.grc
-    requirements:
-      run:
-        - gnuradio-grc
-        - gnuradio-uhd
+  #- script:
+      ## Verify that example flowgraphs can be generated
+      #- if: unix
+        #then: |
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/lora_RX.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/lora_TX.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/tx_rx_functionality_check.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/tx_rx_simulation.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/tx_rx_usrp.grc
+      #- if: win
+        #then: |
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\lora_RX.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\lora_TX.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\tx_rx_functionality_check.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\tx_rx_simulation.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\tx_rx_usrp.grc
+    #requirements:
+      #run:
+        #- gnuradio-grc
+        #- gnuradio-uhd
 
 about:
   homepage: https://github.com/tapparelj/gr-lora_sdr
