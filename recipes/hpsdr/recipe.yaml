@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  oot_name: hpsdr
+  name: gnuradio-${{ oot_name }}
+  # update script relies on `git_url` and `git_branch` and can replace:
+  #   `git_rev`, `base_version`, `date_str`, `build`
+  git_url: https://github.com/radioconda/gr-hpsdr.git
+  git_branch: updates
+  git_rev: 7748cc99fbe1e49642aee973b9c70bdc130800a6
+  base_version: "0.0.0"
+  date_str: "20250304"
+  version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
+  build: "0"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  git: ${{ git_url }}
+  rev: ${{ git_rev }}
+
+build:
+  number: ${{ build }}
+  skip:
+    - win
+  files:
+    exclude:
+      - "**/gdk-pixbuf*"
+      - "**/*.pyc"
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - numpy
+        - pybind11
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake
+    - git
+    - ninja
+    - pkg-config
+  host:
+    - gnuradio-core
+    - libboost-devel
+    - numpy
+    - if: win
+      then: pip
+    - pybind11
+    - python
+  run:
+    - numpy
+    - python
+  ignore_run_exports:
+    from_package:
+      # this only builds against the headers
+      - libboost-devel
+
+tests:
+  - python:
+      imports:
+        - gnuradio.${{ oot_name }}
+      pip_check: false
+  - package_contents:
+      include:
+        - gnuradio/${{ oot_name }}/api.h
+      lib:
+        - ${{ name }}
+      files:
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_NB.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_WB.block.yml
+
+about:
+  homepage: https://github.com/Tom-McDermott/gr-hpsdr
+  license: GPL-3.0-or-later
+  license_file: license.txt
+  summary: GNU Radio module for HPSDR Hermes / Metis, and Red Pitaya
+  description: >
+    GNU Radio module for HPSDR Hermes / Metis, and Red Pitaya (using OpenHPSDR
+    protocol 1).
+
+    * hermesNB sources decimated downconverted 48K-to-384K receiver complex
+    stream(s), and sinks one 48k sample rate transmit complex stream.
+    * hermesWB sources raw ADC samples as a vector of floats, with vlen=16384.
+    Each individual vector contains time contiguous samples. However there are
+    large time gaps between between vectors. This is how HPSDR produces raw
+    samples, it is due to Ethernet interface rate limitations between HPSDR and
+    the host computer.
+
+extra:
+  recipe-maintainers:
+    - ryanvolz
