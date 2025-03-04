@@ -11,7 +11,12 @@ cmake -G "Ninja" %CMAKE_ARGS% ^
     -DCMAKE_PREFIX_PATH="%PREFIX%\Library" ^
     -DGR_PYTHON_DIR:PATH="%SP_DIR%" ^
     -DENABLE_DOXYGEN=OFF ^
+    -DENABLE_GLFW=ON ^
+    -DENABLE_PNG=ON ^
+    -DENABLE_PYTHON=ON ^
+    -DENABLE_QT=ON ^
     -DENABLE_TESTING=ON ^
+    -DGLFW3_LIBRARIES="%LIBRARY_LIB%\glfw3dll.lib" ^
     ..
 if errorlevel 1 exit 1
 

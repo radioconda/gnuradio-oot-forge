@@ -8,6 +8,10 @@ cd buildconda
 cmake_config_args=(
     -DLIB_SUFFIX=""
     -DENABLE_DOXYGEN=OFF
+    -DENABLE_GLFW=ON
+    -DENABLE_PNG=ON
+    -DENABLE_PYTHON=ON
+    -DENABLE_QT=ON
     -DENABLE_TESTING=ON
 )
 
