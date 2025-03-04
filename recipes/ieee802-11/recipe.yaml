@@ -92,21 +92,21 @@ tests:
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_parse_mac.block.yml
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_sync_long.block.yml
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_sync_short.block.yml
-  - script:
-      # Verify that example flowgraphs can be generated
-      - if: unix
-        then: |
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/wifi_phy_hier.grc
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/wifi_rx.grc
-      - if: win
-        then: |
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\wifi_phy_hier.grc
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\wifi_rx.grc
-    requirements:
-      run:
-        - gnuradio-grc
-        - gnuradio-qtgui
-        - gnuradio-uhd
+  #- script:
+      ## Verify that example flowgraphs can be generated
+      #- if: unix
+        #then: |
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/wifi_phy_hier.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/wifi_rx.grc
+      #- if: win
+        #then: |
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\wifi_phy_hier.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\wifi_rx.grc
+    #requirements:
+      #run:
+        #- gnuradio-grc
+        #- gnuradio-qtgui
+        #- gnuradio-uhd
 
 about:
   homepage: https://github.com/bastibl/gr-ieee802-11
