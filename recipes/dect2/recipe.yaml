@@ -1,0 +1,130 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  oot_name: dect2
+  name: gnuradio-${{ oot_name }}
+  # update script relies on `git_url` and `git_branch` and can replace:
+  #   `git_rev`, `base_version`, `date_str`, `build`
+  git_url: https://github.com/radioconda/gr-dect2.git
+  git_branch: updates
+  git_rev: b103477fe3b6d252123efb96383b7caeb0fca416
+  base_version: "0.0.0"
+  date_str: "20250304"
+  version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
+  build: "0"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  git: ${{ git_url }}
+  rev: ${{ git_rev }}
+
+build:
+  number: ${{ build }}
+  files:
+    exclude:
+      - "**/gdk-pixbuf*"
+      - "**/*.pyc"
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - numpy
+        - pybind11
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake
+    - git
+    - ninja
+    - pkg-config
+  host:
+    - gnuradio-core
+    - libboost-devel
+    - numpy
+    - if: win
+      then: pip
+    - pybind11
+    - python
+  run:
+    - numpy
+    - python
+  ignore_run_exports:
+    from_package:
+      # this only builds against the headers
+      - libboost-devel
+
+tests:
+  - python:
+      imports:
+        - gnuradio.${{ oot_name }}
+      pip_check: false
+  - package_contents:
+      include:
+        - gnuradio/${{ oot_name }}/api.h
+      lib:
+        - ${{ name }}
+      files:
+        # Example flowgraphs
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/dect2.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/dect2_b200.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/dect2_Hackrf.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/dect2_plutosdr.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/dect2_soapy.grc
+
+        # GRC blocks
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_console.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_packet_decoder.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_packet_receiver.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_phase_diff.block.yml
+  - script:
+      # Verify that example flowgraphs can be generated
+      - if: unix
+        then: |
+          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2.grc
+          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2_b200.grc
+          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2_Hackrf.grc
+          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2_plutosdr.grc
+          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2_soapy.grc
+      - if: win
+        then: |
+          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2.grc
+          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2_b200.grc
+          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2_Hackrf.grc
+          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2_plutosdr.grc
+          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2_soapy.grc
+    requirements:
+      run:
+        - gnuradio-grc
+        - gnuradio-iio
+        - gnuradio-osmosdr
+        - gnuradio-qtgui
+        - gnuradio-soapy
+        - gnuradio-uhd
+
+about:
+  homepage: https://github.com/pavelyazev/gr-dect2
+  license: GPL-3.0-or-later
+  license_file: LICENSE
+  summary: GNU Radio module for DECT voice channel decoding
+  description: >
+    This project was developed to demonstrate the possibility of real-time DECT
+    voice channel decoding by GNU Radio. It allows to listen to a voice when
+    encryption isn't applied. As an example DECT digital baby monitors don't
+    perform encryption.
+
+    Usage of this project for phone connection eavesdropping may be illegal in
+    some countries.
+
+    Example gnuradio-companion flowgraphs are installed with the package and
+    can be found in:
+        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/${{ oot_name }}`
+        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\${{ oot_name }}`
+
+extra:
+  recipe-maintainers:
+    - ryanvolz
