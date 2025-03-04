@@ -64,7 +64,6 @@ cxx_compiler_version:
   then: '18'
 - if: target_platform == 'osx-arm64'
   then: '18'
-fmt: '11'
 freetype: '2'
 glew:
 - if: target_platform == 'win-64'

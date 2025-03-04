@@ -43,7 +43,6 @@ requirements:
     - ninja
     - pkg-config
   host:
-    - fmt
     - freetype
     - if: win
       then: glew
