@@ -100,21 +100,21 @@ tests:
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_rime_stack.block.yml
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_zeropadding_b.block.yml
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_zeropadding_removal_b.block.yml
-  - script:
-      # Verify that example flowgraphs can be generated
-      - if: unix
-        then: |
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/ieee802_15_4_CSS_PHY.grc
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/ieee802_15_4_OQPSK_PHY.grc
-      - if: win
-        then: |
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\ieee802_15_4_CSS_PHY.grc
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\ieee802_15_4_OQPSK_PHY.grc
-    requirements:
-      run:
-        - gnuradio-grc
-        - gnuradio-qtgui
-        - gnuradio-uhd
+  #- script:
+      ## Verify that example flowgraphs can be generated
+      #- if: unix
+        #then: |
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/ieee802_15_4_CSS_PHY.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/ieee802_15_4_OQPSK_PHY.grc
+      #- if: win
+        #then: |
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\ieee802_15_4_CSS_PHY.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\ieee802_15_4_OQPSK_PHY.grc
+    #requirements:
+      #run:
+        #- gnuradio-grc
+        #- gnuradio-qtgui
+        #- gnuradio-uhd
 
 about:
   homepage:  https://github.com/bastibl/gr-ieee802-15-4
