@@ -6,7 +6,7 @@ context:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/radioconda/gr-dect2.git
   git_branch: updates
-  git_rev: b103477fe3b6d252123efb96383b7caeb0fca416
+  git_rev: 027a3d647aadc1ba0bdcf2b7c4dd1318b9a449f1
   base_version: "0.0.0"
   date_str: "20250304"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
