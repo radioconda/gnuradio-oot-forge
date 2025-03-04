@@ -2,6 +2,12 @@
 
 set -ex
 
+# conda-forge uses newer libcpp than the available XCode would have you believe
+# so pass _LIBCPP_DISABLE_AVAILABILITY to skip version checks and just try linking
+if [[ $target_platform == osx* ]] ; then
+    CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
+fi
+
 cmake -E make_directory buildconda
 cd buildconda
 
