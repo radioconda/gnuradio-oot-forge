@@ -154,7 +154,8 @@ def render_variants(recipe_path, target_platforms):
         if not isinstance(metadatas, list):
             metadatas = [metadatas]
         variants = [m["build_configuration"]["variant"] for m in metadatas]
-        platform_variants[target_platform] = collapse_variant_matrix(variants)
+        if variants:
+            platform_variants[target_platform] = collapse_variant_matrix(variants)
 
     combined_variant = combine_platform_variants(platform_variants)
     variant_path = recipe_path.parent / "variants.yaml"
