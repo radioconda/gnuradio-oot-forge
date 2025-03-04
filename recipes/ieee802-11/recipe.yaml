@@ -1,0 +1,129 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  oot_name: ieee802_11
+  name: gnuradio-${{ oot_name }}
+  # update script relies on `git_url` and `git_branch` and can replace:
+  #   `git_rev`, `base_version`, `date_str`, `build`
+  git_url: https://github.com/radioconda/gr-ieee802-11.git
+  git_branch: updates
+  git_rev: 761bdd9e2dcb0cf161b4ff120daeee6ce8ef60c4
+  base_version: "0.0.0"
+  date_str: "20250304"
+  version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
+  build: "0"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  git: ${{ git_url }}
+  rev: ${{ git_rev }}
+
+build:
+  number: ${{ build }}
+  files:
+    exclude:
+      - "**/gdk-pixbuf*"
+      - "**/*.pyc"
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - numpy
+        - pybind11
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake
+    - git
+    - ninja
+    - pkg-config
+  host:
+    - fmt
+    - gnuradio-core
+    - libboost-devel
+    - numpy
+    - if: win
+      then: pip
+    - pybind11
+    - python
+    - spdlog
+    - volk
+  run:
+    - gnuradio-foo
+    - numpy
+    - pyopengl
+    - python
+  ignore_run_exports:
+    from_package:
+      # this only builds against the headers
+      - libboost-devel
+
+tests:
+  - python:
+      imports:
+        - ${{ oot_name }}
+      pip_check: false
+  - package_contents:
+      include:
+        - ${{ oot_name }}/api.h
+      lib:
+        - ${{ name }}
+      files:
+        # Example flowgraphs
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/wifi_loopback.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/wifi_phy_hier.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/wifi_rx.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/wifi_transceiver.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/wifi_tx.grc
+
+        # GRC blocks
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_chunks_to_symbols.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_decode_mac.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_ether_encap.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_extract_csi.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_frame_equalizer.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_mac.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_mapper.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_parse_mac.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_sync_long.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_sync_short.block.yml
+  #- script:
+      ## Verify that example flowgraphs can be generated
+      #- if: unix
+        #then: |
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/wifi_phy_hier.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/wifi_rx.grc
+      #- if: win
+        #then: |
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\wifi_phy_hier.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\wifi_rx.grc
+    #requirements:
+      #run:
+        #- gnuradio-grc
+        #- gnuradio-qtgui
+        #- gnuradio-uhd
+
+about:
+  homepage: https://github.com/bastibl/gr-ieee802-11
+  license: GPL-3.0-or-later
+  license_file: LICENSE
+  summary: IEEE 802.11 a/g/p Transceiver for GNU Radio
+  description: >
+    This an IEEE 802.11 a/g/p transceiver for GNU Radio that is fitted for
+    operation with Ettus N210s and B210s. Interoperability was tested with many
+    off-the-shelf WiFi cards and IEEE 802.11p prototypes. The code can also be
+    used in simulations.
+
+    Example gnuradio-companion flowgraphs are installed with the package and
+    can be found in:
+        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/${{ oot_name }}`
+        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\${{ oot_name }}`
+
+extra:
+  recipe-maintainers:
+    - ryanvolz
