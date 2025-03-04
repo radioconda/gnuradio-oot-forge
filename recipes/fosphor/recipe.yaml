@@ -6,7 +6,7 @@ context:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/radioconda/gr-fosphor.git
   git_branch: updates
-  git_rev: 6965665736d3265941741f1550d97358a04e8b1f
+  git_rev: c9e0ef02128e8805b58538c25ddfddfbd700f0c1
   base_version: "0.0.0"
   date_str: "20250304"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
