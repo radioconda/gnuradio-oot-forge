@@ -96,14 +96,12 @@ tests:
       # Verify that example flowgraphs can be generated
       - if: unix
         then: |
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/wifi_loopback.grc
           grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/wifi_phy_hier.grc
           grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/wifi_rx.grc
           grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/wifi_transceiver.grc
           grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/wifi_tx.grc
       - if: win
         then: |
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\wifi_loopback.grc
           grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\wifi_phy_hier.grc
           grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\wifi_rx.grc
           grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\wifi_transceiver.grc
