@@ -71,8 +71,8 @@ tests:
       lib:
         - ${{ name }}
       files:
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_NB.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_WB.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_hermesNB.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_hermesWB.block.yml
 
 about:
   homepage: https://github.com/Tom-McDermott/gr-hpsdr
