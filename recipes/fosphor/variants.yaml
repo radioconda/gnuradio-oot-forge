@@ -1,0 +1,81 @@
+MACOSX_DEPLOYMENT_TARGET:
+- if: target_platform == 'osx-64'
+  then: '10.13'
+- if: target_platform == 'osx-arm64'
+  then: '11.0'
+c_compiler:
+- if: target_platform == 'linux-64'
+  then: gcc
+- if: target_platform == 'linux-aarch64'
+  then: gcc
+- if: target_platform == 'osx-64'
+  then: clang
+- if: target_platform == 'osx-arm64'
+  then: clang
+- if: target_platform == 'win-64'
+  then: vs2019
+c_compiler_version:
+- if: target_platform == 'linux-64'
+  then: '13'
+- if: target_platform == 'linux-aarch64'
+  then: '13'
+- if: target_platform == 'osx-64'
+  then: '18'
+- if: target_platform == 'osx-arm64'
+  then: '18'
+c_stdlib:
+- if: target_platform == 'linux-64'
+  then: sysroot
+- if: target_platform == 'linux-aarch64'
+  then: sysroot
+- if: target_platform == 'osx-64'
+  then: macosx_deployment_target
+- if: target_platform == 'osx-arm64'
+  then: macosx_deployment_target
+- if: target_platform == 'win-64'
+  then: vs
+c_stdlib_version:
+- if: target_platform == 'linux-64'
+  then: '2.17'
+- if: target_platform == 'linux-aarch64'
+  then: '2.17'
+- if: target_platform == 'osx-64'
+  then: '10.13'
+- if: target_platform == 'osx-arm64'
+  then: '11.0'
+channel_targets: gnuradio-oot-forge main
+cxx_compiler:
+- if: target_platform == 'linux-64'
+  then: gxx
+- if: target_platform == 'linux-aarch64'
+  then: gxx
+- if: target_platform == 'osx-64'
+  then: clangxx
+- if: target_platform == 'osx-arm64'
+  then: clangxx
+- if: target_platform == 'win-64'
+  then: vs2019
+cxx_compiler_version:
+- if: target_platform == 'linux-64'
+  then: '13'
+- if: target_platform == 'linux-aarch64'
+  then: '13'
+- if: target_platform == 'osx-64'
+  then: '18'
+- if: target_platform == 'osx-arm64'
+  then: '18'
+freetype: '2'
+glew:
+- if: target_platform == 'win-64'
+  then: '2.1'
+gnuradio_core: 3.10.11
+libboost_devel: '1.86'
+libpng: '1.6'
+numpy: '2.0'
+python:
+- 3.9.* *_cpython
+- 3.10.* *_cpython
+- 3.11.* *_cpython
+- 3.12.* *_cpython
+qt_main: '5.15'
+spdlog: '1.15'
