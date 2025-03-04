@@ -22,6 +22,8 @@ source:
 
 build:
   number: ${{ build }}
+  skip:
+    - win
   files:
     exclude:
       - "**/gdk-pixbuf*"
