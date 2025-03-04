@@ -52,6 +52,7 @@ requirements:
     - python
   run:
     - numpy
+    - pyqt
     - python
   ignore_run_exports:
     from_package:
