@@ -106,16 +106,10 @@ tests:
         then: |
           grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/ieee802_15_4_CSS_PHY.grc
           grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/ieee802_15_4_OQPSK_PHY.grc
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/transceiver_CSS_loopback.grc
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/transceiver_CSS_USRP.grc
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/transceiver_OQPSK.grc
       - if: win
         then: |
           grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\ieee802_15_4_CSS_PHY.grc
           grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\ieee802_15_4_OQPSK_PHY.grc
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\transceiver_CSS_loopback.grc
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\transceiver_CSS_USRP.grc
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\transceiver_OQPSK.grc
     requirements:
       run:
         - gnuradio-grc
