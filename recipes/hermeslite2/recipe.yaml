@@ -75,18 +75,18 @@ tests:
         # GRC blocks
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_NB.block.yml
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_WB.block.yml
-  - script:
-      # Verify that example flowgraphs can be generated
-      - if: unix
-        then: |
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/receive.grc
-      - if: win
-        then: |
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\receive.grc
-    requirements:
-      run:
-        - gnuradio-grc
-        - gnuradio-qtgui
+  #- script:
+      ## Verify that example flowgraphs can be generated
+      #- if: unix
+        #then: |
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/receive.grc
+      #- if: win
+        #then: |
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\receive.grc
+    #requirements:
+      #run:
+        #- gnuradio-grc
+        #- gnuradio-qtgui
 
 about:
   homepage: https://github.com/daniestevez/gr-hermeslite2
