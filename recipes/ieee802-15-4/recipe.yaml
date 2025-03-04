@@ -1,0 +1,140 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  oot_name: ieee802_15_4
+  name: gnuradio-${{ oot_name }}
+  # update script relies on `git_url` and `git_branch` and can replace:
+  #   `git_rev`, `base_version`, `date_str`, `build`
+  git_url: https://github.com/radioconda/gr-ieee802-15-4.git
+  git_branch: updates
+  git_rev: 61f4c4a617c1c0a88970de5decf7cf93f30b0102
+  base_version: "3.6"
+  date_str: "20250304"
+  version: ${{ base_version }}.post${{ date_str }}+g${{ git_rev[:7] }}
+  build: "0"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  git: ${{ git_url }}
+  rev: ${{ git_rev }}
+
+build:
+  number: ${{ build }}
+  files:
+    exclude:
+      - "**/gdk-pixbuf*"
+      - "**/*.pyc"
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - numpy
+        - pybind11
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake
+    - git
+    - ninja
+    - pkg-config
+  host:
+    - gnuradio-core
+    - libboost-devel
+    - numpy
+    - if: win
+      then: pip
+    - pybind11
+    - python
+    - volk
+  run:
+    - gnuradio-foo
+    - matplotlib-base
+    - numpy
+    - python
+
+tests:
+  - python:
+      imports:
+        - ${{ oot_name }}
+      pip_check: false
+  - package_contents:
+      include:
+        - ${{ oot_name }}/api.h
+      lib:
+        - ${{ name }}
+      files:
+        # Example flowgraphs
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/ieee802_15_4_CSS_PHY.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/ieee802_15_4_OQPSK_PHY.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/transceiver_CSS_loopback.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/transceiver_CSS_USRP.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/transceiver_OQPSK.grc
+
+        # GRC blocks
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_access_code_prefixer.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_access_code_removal_b.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_chips_to_bits_fb.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_codeword_demapper_ib.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_codeword_mapper_bi.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_deinterleaver_ff.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_dqcsk_demapper_cc.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_dqcsk_mapper_fc.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_dqpsk_mapper_ff.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_dqpsk_soft_demapper_cc.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_frame_buffer_cc.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_interleaver_ii.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_mac.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_multiuser_chirp_detector_cc.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_packet_sink.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_phr_prefixer.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_phr_removal.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_preamble_sfd_prefixer_ii.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_preamble_tagger_cc.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_qpsk_demapper_fi.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_qpsk_mapper_if.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_rime_stack.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_zeropadding_b.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_zeropadding_removal_b.block.yml
+  - script:
+      # Verify that example flowgraphs can be generated
+      - if: unix
+        then: |
+          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/ieee802_15_4_CSS_PHY.grc
+          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/ieee802_15_4_OQPSK_PHY.grc
+          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/transceiver_CSS_loopback.grc
+          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/transceiver_CSS_USRP.grc
+          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/transceiver_OQPSK.grc
+      - if: win
+        then: |
+          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\ieee802_15_4_CSS_PHY.grc
+          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\ieee802_15_4_OQPSK_PHY.grc
+          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\transceiver_CSS_loopback.grc
+          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\transceiver_CSS_USRP.grc
+          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\transceiver_OQPSK.grc
+    requirements:
+      run:
+        - gnuradio-grc
+        - gnuradio-qtgui
+        - gnuradio-uhd
+
+about:
+  homepage:  https://github.com/bastibl/gr-ieee802-15-4
+  license: GPL-3.0-or-later
+  license_file: LICENSE
+  summary:  IEEE 802.15.4 ZigBee Transceiver for GNU Radio
+  description: >
+    This is an IEEE802.15.4 O-QPSK transceiver for GNU Radio, based on Thomas Schmid's implementation.
+
+    Example gnuradio-companion flowgraphs are installed with the package and
+    can be found in:
+        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/${{ oot_name }}`
+        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\${{ oot_name }}`
+
+extra:
+  recipe-maintainers:
+    - ryanvolz
