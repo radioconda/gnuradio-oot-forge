@@ -42,3 +42,18 @@ repos:
         types: [yaml]
         files: ^\.github/workflows/
         stages: [pre-commit, manual]
+      - id: render-variants
+        name: Render recipe variants from pins
+        language: system
+        entry: pixi run --environment=render-variants render-variants
+        types: [text]
+        files: |
+            (?x)^(
+                recipes/variants.yaml|
+                recipes/.*/recipe.yaml|
+                recipes/.*/variants.yaml|
+                pixi.lock
+            )$
+        pass_filenames: false
+        require_serial: true
+        stages: [pre-commit, manual]
