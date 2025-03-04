@@ -1,0 +1,126 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  oot_name: adsb
+  name: gnuradio-${{ oot_name }}
+  # update script relies on `git_url` and `git_branch` and can replace:
+  #   `git_rev`, `base_version`, `date_str`, `build`
+  git_url: https://github.com/radioconda/gr-adsb.git
+  git_branch: updates
+  git_rev: 9645757857deb638cc92923e4de84d0a56bb861c
+  base_version: "0.0.0"
+  date_str: "20250304"
+  version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
+  build: "0"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  git: ${{ git_url }}
+  rev: ${{ git_rev }}
+
+build:
+  number: ${{ build }}
+  string: ${{ "win" if win else "unix" }}_py_${{ build }}
+  noarch: python
+  files:
+    exclude:
+      - "**/gdk-pixbuf*"
+      - "**/*.pyc"
+
+requirements:
+  build:
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake
+    - git
+    - ninja
+    - pkg-config
+  host:
+    - asciimatics
+    - colorama
+    - gnuradio-core
+    - libboost-devel
+    - numpy
+    - if: win
+      then: pip
+    - python ${{ python_min }}.*
+  run:
+    - if: unix
+      then: __unix
+    - if: win
+      then: __win
+    - asciimatics
+    - colorama
+    - flask
+    - flask-socketio >=5,<6
+    - gevent
+    - gevent-websocket
+    # Need gnuradio as a run dep because noarch doesn't do run_exports.
+    # This pin can be more relaxed than the gnuradio run_exports because the
+    # API is stable at the 'x.x' level and we don't need to worry about ABI.
+    - ${{ pin_compatible('gnuradio-core', lower_bound='x.x', upper_bound='x.x') }}
+    - numpy
+    - python >=${{ python_min }}
+    - pyzmq
+  ignore_run_exports:
+    from_package:
+      - ${{ compiler("c")|split|first }}
+      - ${{ stdlib("c")|split|first }}
+      - ${{ compiler("cxx")|split|first }}
+      # this only builds against the headers
+      - libboost-devel
+
+tests:
+  - python:
+      imports:
+        - gnuradio.${{ oot_name }}
+        - gnuradio.${{ oot_name }}.webserver
+      pip_check: false
+  - package_contents:
+      files:
+        # Example flowgraphs
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/adsb_rx.grc
+
+        # GRC blocks
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_decoder.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_demod.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_framer.block.yml
+  #- script:
+      ## Verify that example flowgraphs can be generated
+      #- if: unix
+        #then: |
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/adsb_rx.grc
+      #- if: win
+        #then: |
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\adsb_rx.grc
+    #requirements:
+      #run:
+        #- gnuradio-grc
+        #- gnuradio-qtgui
+        #- gnuradio-uhd
+        #- gnuradio-zeromq
+        #- python ${{ python_min }}.*
+
+about:
+  homepage: https://github.com/mhostetter/gr-adsb
+  license: GPL-3.0-or-later
+  license_file: COPYING
+  summary: GNU Radio module to demodulate and decode ADS-B messages
+  description: >
+    A GNU Radio out-of-tree (OOT) module to demodulate and decode Automatic
+    Dependent Surveillance Broadcast (ADS-B) messages.
+
+    To use the built-in web app, run `python -m gnuradio.adsb.webserver` and
+    open a browser to http://127.0.0.1:5000.
+
+    Example gnuradio-companion flowgraphs are installed with the package and
+    can be found in:
+        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/${{ oot_name }}`
+        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\${{ oot_name }}`
+
+extra:
+  recipe-maintainers:
+    - ryanvolz
