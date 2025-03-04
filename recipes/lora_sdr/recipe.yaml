@@ -1,0 +1,137 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  oot_name: lora_sdr
+  name: gnuradio-${{ oot_name }}
+  # update script relies on `git_url` and `git_branch` and can replace:
+  #   `git_rev`, `base_version`, `date_str`, `build`
+  git_url: https://github.com/radioconda/gr-lora_sdr.git
+  git_branch: updates
+  git_rev: b853b7fc7c7dc44c48079615801f1fcb107dd026
+  base_version: "0.0.0"
+  date_str: "20250304"
+  version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
+  build: "0"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  git: ${{ git_url }}
+  rev: ${{ git_rev }}
+
+build:
+  number: ${{ build }}
+  files:
+    exclude:
+      - "**/gdk-pixbuf*"
+      - "**/*.pyc"
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - numpy
+        - pybind11
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake
+    - git
+    - ninja
+    - pkg-config
+  host:
+    - gnuradio-core
+    - libboost-devel
+    - numpy
+    - if: win
+      then: pip
+    - pybind11
+    - python
+    - volk
+  run:
+    - numpy
+    - python
+  ignore_run_exports:
+    from_package:
+      # this only builds against the headers
+      - libboost-devel
+
+tests:
+  - python:
+      imports:
+        - gnuradio.${{ oot_name }}
+      pip_check: false
+  - package_contents:
+      include:
+        - gnuradio/${{ oot_name }}/api.h
+      lib:
+        - ${{ name }}
+      files:
+        # Example flowgraphs
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/lora_RX.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/lora_TX.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/tx_rx_functionality_check.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/tx_rx_simulation.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/tx_rx_usrp.grc
+
+        # GRC blocks
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_lora_rx.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_lora_tx.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_header.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_header_decoder.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_modulate.block.yml
+  #- script:
+      ## Verify that example flowgraphs can be generated
+      #- if: unix
+        #then: |
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/lora_RX.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/lora_TX.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/tx_rx_functionality_check.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/tx_rx_simulation.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/tx_rx_usrp.grc
+      #- if: win
+        #then: |
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\lora_RX.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\lora_TX.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\tx_rx_functionality_check.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\tx_rx_simulation.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\tx_rx_usrp.grc
+    #requirements:
+      #run:
+        #- gnuradio-grc
+        #- gnuradio-uhd
+
+about:
+  homepage: https://github.com/tapparelj/gr-lora_sdr
+  license: GPL-3.0-or-later
+  license_file: LICENSE
+  summary: GNU Radio software-defined radio (SDR) implementation of a LoRa transceiver
+  description: >
+    This is the fully-functional GNU Radio software-defined radio (SDR)
+    implementation of a LoRa transceiver with all the necessary receiver
+    components to operate correctly even at very low SNRs. The transceiver is
+    available as a module for GNU Radio 3.10. This work has been conducted at
+    the Telecommunication Circuits Laboratory, EPFL.<br>
+
+    In the GNU Radio implementation of the LoRa Tx and Rx chains the user can
+    choose all the parameters of the transmission, such as the spreading
+    factor, the coding rate, the bandwidth, the sync word, the presence of an
+    explicit header and CRC.<br>
+
+    Example gnuradio-companion flowgraphs are installed with the package and
+    can be found in:
+        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/${{ oot_name }}`
+        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\${{ oot_name }}`
+    <br>
+
+    If you find this module useful for your project, please consider citing the
+    publication "An Open-Source LoRa Physical Layer Prototype on GNU Radio"
+    (<a href="https://ieeexplore.ieee.org/document/9154273">IEEE Xplore</a>,
+    <a href="https://arxiv.org/abs/2002.08208">arXiv</a>)
+
+extra:
+  recipe-maintainers:
+    - ryanvolz
