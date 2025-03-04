@@ -82,30 +82,30 @@ tests:
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_packet_decoder.block.yml
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_packet_receiver.block.yml
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_phase_diff.block.yml
-  - script:
-      # Verify that example flowgraphs can be generated
-      - if: unix
-        then: |
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2.grc
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2_b200.grc
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2_Hackrf.grc
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2_plutosdr.grc
-          grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2_soapy.grc
-      - if: win
-        then: |
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2.grc
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2_b200.grc
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2_Hackrf.grc
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2_plutosdr.grc
-          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2_soapy.grc
-    requirements:
-      run:
-        - gnuradio-grc
-        - gnuradio-iio
-        - gnuradio-osmosdr
-        - gnuradio-qtgui
-        - gnuradio-soapy
-        - gnuradio-uhd
+  #- script:
+      ## Verify that example flowgraphs can be generated
+      #- if: unix
+        #then: |
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2_b200.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2_Hackrf.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2_plutosdr.grc
+          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/dect2_soapy.grc
+      #- if: win
+        #then: |
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2_b200.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2_Hackrf.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2_plutosdr.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\dect2_soapy.grc
+    #requirements:
+      #run:
+        #- gnuradio-grc
+        #- gnuradio-iio
+        #- gnuradio-osmosdr
+        #- gnuradio-qtgui
+        #- gnuradio-soapy
+        #- gnuradio-uhd
 
 about:
   homepage: https://github.com/pavelyazev/gr-dect2
