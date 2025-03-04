@@ -49,12 +49,12 @@ requirements:
     - libboost-devel
     - if: linux
       then: libgl-devel
+    - numpy
     - if: win
       then: pip
     - pybind11
     - pyqt
     - python
-    - numpy
     - qt-main
     - qwt
     - spdlog

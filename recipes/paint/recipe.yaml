@@ -45,11 +45,11 @@ requirements:
   host:
     - gnuradio-core
     - libboost-devel
+    - numpy
     - if: win
       then: pip
     - pybind11
     - python
-    - numpy
     - volk
   run:
     - numpy
