@@ -24,6 +24,9 @@ if errorlevel 1 exit 1
 cmake --build . --config Release --target install
 if errorlevel 1 exit 1
 
+cmake -E copy_directory ..\web %SP_DIR%\gnuradio\adsb
+if errorlevel 1 exit 1
+
 :: test
 ctest --build-config Release --output-on-failure --timeout 120 -j%CPU_COUNT%
 if errorlevel 1 exit 1
