@@ -6,7 +6,7 @@ context:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/radioconda/gr-lora_sdr.git
   git_branch: updates
-  git_rev: 00add3105b46b998ea07c3097bcfe4b00b5a1730
+  git_rev: b853b7fc7c7dc44c48079615801f1fcb107dd026
   base_version: "0.0.0"
   date_str: "20250304"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
