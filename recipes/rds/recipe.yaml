@@ -12,7 +12,7 @@ context:
   base_version: "3.10"
   date_str: "20250303"
   version: ${{ base_version }}.post${{ date_str }}+g${{ git_rev[:7] }}
-  build: "0"
+  build: "1"
 
 package:
   name: ${{ name|lower }}
