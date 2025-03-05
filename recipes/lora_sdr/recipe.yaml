@@ -4,11 +4,11 @@ context:
   name: gnuradio-${{ oot_name }}
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
-  git_url: https://github.com/radioconda/gr-lora_sdr.git
-  git_branch: updates
-  git_rev: b853b7fc7c7dc44c48079615801f1fcb107dd026
+  git_url: https://github.com/tapparelj/gr-lora_sdr.git
+  git_branch: master
+  git_rev: a8143cb6162e0ee0677531aec36ca5f05fd678e0
   base_version: "0.0.0"
-  date_str: "20250304"
+  date_str: "20250305"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
   build: "0"
 

@@ -64,18 +64,18 @@ cxx_compiler_version:
   then: '18'
 - if: target_platform == 'osx-arm64'
   then: '18'
-gnuradio_core: 3.10.11
+gnuradio_core: 3.10.12
 gnuradio_leo_data:
 - if: target_platform == 'linux-64'
-  then: 1.0.0.post20250214+g8f62b92 unix_1
+  then: 1.0.0.post20250214+g8f62b92 unix_2
 - if: target_platform == 'linux-aarch64'
-  then: 1.0.0.post20250214+g8f62b92 unix_1
+  then: 1.0.0.post20250214+g8f62b92 unix_2
 - if: target_platform == 'osx-64'
-  then: 1.0.0.post20250214+g8f62b92 unix_1
+  then: 1.0.0.post20250214+g8f62b92 unix_2
 - if: target_platform == 'osx-arm64'
-  then: 1.0.0.post20250214+g8f62b92 unix_1
+  then: 1.0.0.post20250214+g8f62b92 unix_2
 - if: target_platform == 'win-64'
-  then: 1.0.0.post20250214+g8f62b92 win_1
+  then: 1.0.0.post20250214+g8f62b92 win_2
 libboost_devel: '1.86'
 numpy: '2.0'
 python:

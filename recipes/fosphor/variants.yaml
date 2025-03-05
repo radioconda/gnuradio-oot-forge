@@ -68,7 +68,7 @@ freetype: '2'
 glew:
 - if: target_platform == 'win-64'
   then: '2.1'
-gnuradio_core: 3.10.11
+gnuradio_core: 3.10.12
 libboost_devel: '1.86'
 libpng: '1.6'
 numpy: '2.0'
