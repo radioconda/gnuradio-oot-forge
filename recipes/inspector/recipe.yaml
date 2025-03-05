@@ -4,13 +4,13 @@ context:
   name: gnuradio-${{ oot_name }}
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
-  git_url: https://github.com/radioconda/gr-inspector.git
-  git_branch: updates
-  git_rev: 57e1ba1d5be9be13863b1d9222121cea62542421
+  git_url: https://github.com/gnuradio/gr-inspector.git
+  git_branch: main
+  git_rev: ad6a69e84eb847f30fe79ba657ba95ddcb211c0c
   base_version: "0.0.0"
   date_str: "20250303"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
-  build: "0"
+  build: "1"
 
 package:
   name: ${{ name|lower }}
