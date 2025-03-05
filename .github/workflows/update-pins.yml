@@ -24,11 +24,11 @@ jobs:
       - name: Update lockfiles
         run: |
           set -o pipefail
-          pixi update --json | pixi exec pixi-diff-to-markdown >> diff.md
+          pixi update --json | pixi exec pixi-diff-to-markdown >> body.md
 
       - name: Update pinned variants
         run: |
-          pixi run render-variants
+          pixi run render-variants --bump-build --summary-output body.md
 
       - name: Check for changed variants
         uses: tj-actions/verify-changed-files@v20
@@ -44,11 +44,12 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
           commit-message: Update pixi lockfile and pinned variants
           title: Update pixi lockfile and pinned variants
-          body-path: diff.md
+          body-path: body.md
           branch: update-pins
           base: main
           labels: pixi, pins
           delete-branch: true
           add-paths: |
             pixi.lock
+            recipes/**/recipes.yaml
             recipes/**/variants.yaml
