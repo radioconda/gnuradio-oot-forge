@@ -4,13 +4,13 @@ context:
   name: gnuradio-${{ oot_name }}
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
-  git_url: https://github.com/radioconda/gr-hermeslite2.git
-  git_branch: updates
-  git_rev: 8f61e5396a73b5cecf696b01ee4a4681f4b56bc5
+  git_url: https://github.com/daniestevez/gr-hermeslite2.git
+  git_branch: main
+  git_rev: 2e6656181ab2f305db91678c21d31c53dfddeba2
   base_version: "1.0.0.0"
-  date_str: "20250304"
+  date_str: "20250305"
   version: ${{ base_version }}.post${{ date_str }}+g${{ git_rev[:7] }}
-  build: "1"
+  build: "0"
 
 package:
   name: ${{ name|lower }}
