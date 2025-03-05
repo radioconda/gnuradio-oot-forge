@@ -1,11 +1,13 @@
 import argparse
 import difflib
 import tempfile
-import yaml
 from pathlib import Path
 
 import git
+import rich.console
+import rich.markdown
 import setuptools_scm
+import yaml
 
 
 def get_latest_git_rev(git_url: str, branch_name: str):
@@ -141,10 +143,13 @@ def main():
             summary_lines.append(diff)
             summary_lines.append("```")
         summary = "\n".join(summary_lines)
-        print(summary)
+        console = rich.console.Console()
+        md = rich.markdown.Markdown(summary)
+        console.print(md)
 
     if args.summary_output is not None:
-        args.summary_output.write_text(summary)
+        with args.summary_output.open("a") as f:
+            f.write(summary)
 
 
 if __name__ == "__main__":

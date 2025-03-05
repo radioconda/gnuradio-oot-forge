@@ -29,12 +29,6 @@ outputs = ["output/**/*.conda", "output/**/repodata.json"]
 [tasks.clean]
 cmd = ["rm", "-rf", "output/bld", "output/src_cache"]
 
-[feature.conda-forge-pinning.dependencies]
-conda-forge-pinning = "*"
-
-[feature.conda-forge-pinning.tasks]
-render-variants = "python .scripts/render-variants.py"
-
 [feature.lint.dependencies]
 actionlint = ">=1.7.7,<2"
 pre-commit = ">=4.1.0,<5"
@@ -52,6 +46,13 @@ ruff-lint = "ruff check --fix --exit-non-zero-on-fix --force-exclude"
 [feature.recipe.dependencies]
 python = ">=3.11"
 pyyaml = "*"
+rich = ">=13.9.4,<14"
+
+[feature.render-variants.dependencies]
+conda-forge-pinning = "*"
+
+[feature.render-variants.tasks]
+render-variants = "python .scripts/render-variants.py"
 
 [feature.update-versions.dependencies]
 gitpython = "*"
@@ -62,5 +63,5 @@ update-versions = "python .scripts/update-versions.py"
 
 [environments]
 lint = {features = ["lint"], no-default-feature=true}
-render-variants = ["recipe", "conda-forge-pinning"]
+render-variants = ["recipe", "render-variants"]
 update-versions = ["recipe", "update-versions"]

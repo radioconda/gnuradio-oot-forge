@@ -1,5 +1,6 @@
 import argparse
 import collections
+import difflib
 import json
 import os
 import subprocess
@@ -7,15 +8,33 @@ import tempfile
 import tomllib
 from pathlib import Path
 
+import rich.console
+import rich.markdown
 import yaml
 
 
-def collapse_variant_matrix(variants):
+def replace_context(recipe_str, new_context_line):
+    """Replace context line in recipe_str."""
+    variable, value = new_context_line.strip().split(": ")
+    lines = recipe_str.splitlines()
+    for i, line in enumerate(lines):
+        if line.strip().startswith(f"{variable}:"):
+            # Keep the leading whitespace
+            whitespace = line[: line.index(f"{variable}:")]
+            lines[i] = f"{whitespace}{new_context_line}"
+            break
+    return "\n".join(lines)
+
+
+def collapse_variant_matrix(variants, extra_ignored_keys=None):
     unique_keys = set()
     unique_keys.update(*tuple(set(v.keys()) for v in variants))
     # remove special variant keys that are not read from the config file
-    unique_keys.discard("build_platform")
-    unique_keys.discard("target_platform")
+    ignored_keys = ["build_platform", "target_platform"]
+    if extra_ignored_keys is not None:
+        ignored_keys.extend(extra_ignored_keys)
+    for key in ignored_keys:
+        unique_keys.discard(key)
     for key in unique_keys.copy():
         if key.startswith("__"):
             unique_keys.discard(key)
@@ -107,12 +126,14 @@ def combine_platform_variants(platform_variants):
     return combined_variant
 
 
-def render_variants(recipe_path, target_platforms):
+def render_variants(recipe_path, target_platforms, bump_build=False, verbose=False):
     """Render variants for recipe from conda-forge-pinning and local file."""
+    print(f"Rendering variants for: {recipe_path}")
+
     base_run_args = [
         "rattler-build",
         "build",
-        "--experimental",
+        # "--experimental",
         "--render-only",
         "--recipe",
         str(recipe_path),
@@ -120,6 +141,8 @@ def render_variants(recipe_path, target_platforms):
         "--variant-config",
         str(Path(os.environ["CONDA_PREFIX"]) / "conda_build_config.yaml"),
     ]
+    if not verbose:
+        base_run_args.insert(1, "--quiet")
     global_variants = recipe_path.parent.parent / "variants.yaml"
     if global_variants.exists():
         base_run_args.extend(
@@ -154,16 +177,55 @@ def render_variants(recipe_path, target_platforms):
         if not isinstance(metadatas, list):
             metadatas = [metadatas]
         variants = [m["build_configuration"]["variant"] for m in metadatas]
+        output_names = set(m["recipe"]["package"]["name"] for m in metadatas)
+        extra_ignored_keys = [n.replace("-", "_") for n in output_names]
         if variants:
-            platform_variants[target_platform] = collapse_variant_matrix(variants)
+            platform_variants[target_platform] = collapse_variant_matrix(
+                variants, extra_ignored_keys=extra_ignored_keys
+            )
 
     combined_variant = combine_platform_variants(platform_variants)
     variant_path = recipe_path.parent / "variants.yaml"
+    orig_variant_text = ""
     if variant_path.exists():
+        orig_variant_text = variant_path.read_text()
         variant_path.unlink()
-    variant_path.write_text(yaml.safe_dump(combined_variant))
+    variant_text = yaml.safe_dump(combined_variant)
+    variant_path.write_text(variant_text)
 
-    print(f"Rendered variants for: {recipe_path}")
+    # Get diff to return for printing
+    name = f"{variant_path.parent.name}/{variant_path.name}"
+    diff_lines = difflib.unified_diff(
+        orig_variant_text.splitlines(),
+        variant_text.splitlines(),
+        fromfile=f"{name}.orig",
+        tofile=name,
+        n=0,
+        lineterm="",
+    )
+    diff = "\n".join(diff_lines)
+
+    if not diff:
+        return None
+
+    if bump_build:
+        with open(recipe_path) as f:
+            recipe = yaml.safe_load(f)
+
+        current_build = recipe["context"].get("build", None)
+
+        if current_build is not None:
+            orig_recipe_str = recipe_path.read_text()
+            recipe_str = replace_context(
+                orig_recipe_str,
+                f'build: "{int(current_build) + 1}"',
+            )
+            # restore trailing newline if it was there before
+            if orig_recipe_str.endswith("\n"):
+                recipe_str += "\n"
+            recipe_path.write_text(recipe_str)
+
+    return diff
 
 
 def main():
@@ -179,6 +241,21 @@ def main():
         dest="manifest_path",
         default=None,
         type=Path,
+    )
+    parser.add_argument(
+        "--summary-output",
+        dest="summary_output",
+        type=Path,
+    )
+    parser.add_argument(
+        "--bump-build",
+        dest="bump_build",
+        action="store_true",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
     )
     args = parser.parse_args()
 
@@ -199,11 +276,39 @@ def main():
 
     target_platforms = manifest["project"]["platforms"]
 
+    diffs = []
     for recipe_path in recipe_dir.glob("**/recipe.yaml"):
         try:
-            render_variants(recipe_path, target_platforms)
+            diff = render_variants(
+                recipe_path,
+                target_platforms,
+                bump_build=args.bump_build,
+                verbose=args.verbose,
+            )
+            if diff is not None:
+                diffs.append(diff)
         except Exception as e:
             print(f"Error processing {recipe_path}: {e}")
+
+    summary = ""
+    if diffs:
+        summary_lines = [
+            "",
+            "Summary of variant changes",
+            "--------------------------",
+        ]
+        for diff in diffs:
+            summary_lines.append("```diff")
+            summary_lines.append(diff)
+            summary_lines.append("```")
+        summary = "\n".join(summary_lines)
+        console = rich.console.Console()
+        md = rich.markdown.Markdown(summary)
+        console.print(md)
+
+    if args.summary_output is not None:
+        with args.summary_output.open("a") as f:
+            f.write(summary)
 
 
 if __name__ == "__main__":
