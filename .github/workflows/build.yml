@@ -39,6 +39,13 @@ jobs:
           pixi-version: v0.41.3
           activate-environment: true
 
+      # Linux emulation for testing after cross-compilation
+      # https://cibuildwheel.pypa.io/en/stable/faq/#emulation
+      - uses: docker/setup-qemu-action@v3
+        with:
+          platforms: all
+        if: matrix.target == 'linux-ppc64le'
+
       - name: Build packages
         shell: bash
         run: |
