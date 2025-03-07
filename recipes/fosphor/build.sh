@@ -5,6 +5,14 @@ set -ex
 cmake -E make_directory buildconda
 cd buildconda
 
+if [[ "${target_platform}" != "${build_platform}" ]]; then
+    rm -f "${PREFIX}/bin/moc"
+    ln -s "${BUILD_PREFIX}/bin/moc" "${PREFIX}/bin/moc"
+
+    echo "Removed: ${PREFIX}/bin/moc"
+    echo "Linked to: ${BUILD_PREFIX}/bin/moc"
+fi
+
 cmake_config_args=(
     -DLIB_SUFFIX=""
     -DENABLE_DOXYGEN=OFF

@@ -38,6 +38,7 @@ requirements:
         - cross-python_${{ target_platform }}
         - numpy
         - pybind11
+        - qt-main
     - ${{ compiler("c") }}
     - ${{ stdlib("c") }}
     - ${{ compiler("cxx") }}
