@@ -9,7 +9,7 @@ jobs:
   update-pins:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: generate-token
         with:
           app-id: ${{ secrets.RADIOCONDA_PRBOT_APP_ID }}
