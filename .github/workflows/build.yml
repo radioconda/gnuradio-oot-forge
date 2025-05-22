@@ -42,6 +42,7 @@ jobs:
       - name: Build packages
         shell: bash
         run: |
+          git config --global core.autocrlf input
           pixi run --frozen build --skip-existing=all --target-platform=${{ matrix.target }} --test=native
           shopt -s nullglob
           ls output/**/*.conda
