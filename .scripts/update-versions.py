@@ -1,6 +1,7 @@
 import argparse
 import difflib
 import tempfile
+import traceback
 from pathlib import Path
 
 import git
@@ -14,6 +15,9 @@ def get_latest_git_rev(git_url: str, branch_name: str):
     """Get latest revision of a branch on a remote Git repository."""
     git_cmd = git.cmd.Git()
     ls_remote_result = git_cmd.ls_remote(git_url, branch_name)
+    if not ls_remote_result:
+        msg = f"Failed to get revision for branch {branch_name} of {git_url}"
+        raise RuntimeError(msg)
     rev, commit_id = ls_remote_result.split()
     return rev
 
@@ -128,8 +132,9 @@ def main():
             diff = update_recipe(recipe_path)
             if diff is not None:
                 diffs.append(diff)
-        except Exception as e:
-            print(f"Error processing {recipe_path}: {e}")
+        except Exception:
+            tb = traceback.format_exc()
+            print(f"Error processing {recipe_path}: {tb}")
 
     summary = ""
     if diffs:

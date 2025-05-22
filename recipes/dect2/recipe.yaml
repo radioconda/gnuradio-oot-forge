@@ -4,13 +4,13 @@ context:
   name: gnuradio-${{ oot_name }}
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
-  git_url: https://github.com/radioconda/gr-dect2.git
-  git_branch: updates
-  git_rev: 027a3d647aadc1ba0bdcf2b7c4dd1318b9a449f1
+  git_url: https://github.com/pavelyazev/gr-dect2.git
+  git_branch: master
+  git_rev: 0d973fe433eebfe3eee6e7f2eeb1322f8976ab42
   base_version: "0.0.0"
-  date_str: "20250304"
+  date_str: "20250316"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
-  build: "1"
+  build: "0"
 
 package:
   name: ${{ name|lower }}
