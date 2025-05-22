@@ -1,0 +1,112 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  oot_name: isdbt
+  name: gnuradio-isdbt
+  # update script relies on `git_url` and `git_branch` and can replace:
+  #   `git_rev`, `base_version`, `date_str`, `build`
+  git_url: https://github.com/git-artes/gr-isdbt
+  git_branch: master
+  git_rev: 56b2556c14ecc5d710070f969fda7a2deae65d8b
+  base_version: "0.0.0"
+  date_str: "20250130"
+  version: ${{ base_version }}.post${{ date_str }}+g${{ git_rev[:7] }}
+  build: "0"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  git: ${{ git_url }}
+  rev: ${{ git_rev }}
+
+build:
+  number: ${{ build }}
+  files:
+    exclude:
+      - "**/gdk-pixbuf*"
+      - "**/*.pyc"
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - numpy
+        - pybind11
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake
+    - git
+    - ninja
+    - pkg-config
+  host:
+    - gnuradio-core
+    - libboost-devel
+    - numpy
+    - if: win
+      then: pip
+    - pybind11
+    - python
+  run:
+    - numpy
+    - python
+  ignore_run_exports:
+    from_package:
+      # this only builds against the headers
+      - libboost-devel
+
+tests:
+  - python:
+      imports:
+        - gnuradio.isdbt
+      pip_check: false
+  - package_contents:
+      include:
+        - gnuradio/isdbt/api.h
+      lib:
+        - gnuradio-isdbt
+      files:
+        # GRC blocks
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_ofdm_synchronization.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_tmcc_decoder.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_frequency_deinterleaver.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_time_deinterleaver.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_symbol_demapper.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_bit_deinterleaver.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_viterbi_decoder.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_byte_deinterleaver.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_energy_descrambler.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_reed_solomon_dec_isdbt.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_tmcc_encoder.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_pilot_signals.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_frequency_interleaver.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_time_interleaver.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_hierarchical_combinator.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_carrier_modulation.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_byte_interleaver.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_energy_dispersal.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/isdbt_subset_of_carriers.block.yml
+  - script:
+      - if: unix
+        then: |
+          # Put commands that test the package on Linux or macOS below
+      - if: win
+        then: |
+          :: Put commands that test the package on Windows below
+    requirements:
+      run:
+
+about:
+  homepage: https://github.com/git-artes/gr-isdbt
+  license: GPL-3.0-or-later
+  license_file: LICENSE
+  summary: A complete transceiver for the digital TV standard ISDB-T
+  description: >
+    An open source implementation of a transceiver (i.e. receiver and transmitter) for the Digital Television standard ISDB-T (ARIB's STD-B31) in GNU Radio.
+
+extra:
+  recipe-maintainers:
+    - ryanvolz

@@ -1,0 +1,51 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v1.0.1
+_src_path: https://github.com/radioconda/gnuradio-oot-recipe-template
+description: An open source implementation of a transceiver (i.e. receiver and transmitter)
+    for the Digital Television standard ISDB-T (ARIB's STD-B31) in GNU Radio.
+git_branch: master
+git_url: https://github.com/git-artes/gr-isdbt
+grc_blocks: 'ofdm_synchronization
+
+    tmcc_decoder
+
+    frequency_deinterleaver
+
+    time_deinterleaver
+
+    symbol_demapper
+
+    bit_deinterleaver
+
+    viterbi_decoder
+
+    byte_deinterleaver
+
+    energy_descrambler
+
+    reed_solomon_dec_isdbt
+
+    tmcc_encoder
+
+    pilot_signals
+
+    frequency_interleaver
+
+    time_interleaver
+
+    hierarchical_combinator
+
+    carrier_modulation
+
+    byte_interleaver
+
+    energy_dispersal
+
+    subset_of_carriers'
+installs_examples: false
+installs_grc_blocks: true
+license: GPL-3.0-or-later
+license_file: LICENSE
+maintainer_username: ryanvolz
+oot_name: isdbt
+summary: A complete transceiver for the digital TV standard ISDB-T
