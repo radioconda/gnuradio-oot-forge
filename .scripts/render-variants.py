@@ -6,6 +6,7 @@ import os
 import subprocess
 import tempfile
 import tomllib
+import traceback
 from pathlib import Path
 
 import rich.console
@@ -287,8 +288,9 @@ def main():
             )
             if diff is not None:
                 diffs.append(diff)
-        except Exception as e:
-            print(f"Error processing {recipe_path}: {e}")
+        except Exception:
+            tb = traceback.format_exc()
+            print(f"Error processing {recipe_path}: {tb}")
 
     summary = ""
     if diffs:
