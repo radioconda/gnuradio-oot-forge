@@ -54,6 +54,14 @@ conda-forge-pinning = "*"
 [feature.render-variants.tasks]
 render-variants = "python .scripts/render-variants.py"
 
+[feature.template.dependencies]
+copier = ">=9.6.0,<10"
+ipython = ">=9.2.0,<10"
+license-expression = ">=30.4.1,<31"
+
+[feature.template.tasks]
+generate = "python .scripts/generate-from-template.py"
+
 [feature.update-versions.dependencies]
 gitpython = "*"
 setuptools_scm = "*"
@@ -64,4 +72,5 @@ update-versions = "python .scripts/update-versions.py"
 [environments]
 lint = {features = ["lint"], no-default-feature=true}
 render-variants = ["recipe", "render-variants"]
-update-versions = ["recipe", "update-versions"]
+update-versions = {features = ["recipe", "update-versions"], no-default-feature=true}
+template = {features = ["recipe", "update-versions", "template"], no-default-feature=true}
