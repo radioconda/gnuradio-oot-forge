@@ -15,9 +15,9 @@ jobs:
           app-id: ${{ secrets.RADIOCONDA_PRBOT_APP_ID }}
           private-key: ${{ secrets.RADIOCONDA_PRBOT_PRIVATE_KEY }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: prefix-dev/setup-pixi@v0.8.8
+      - uses: prefix-dev/setup-pixi@v0.9.0
         with:
           run-install: false
 
