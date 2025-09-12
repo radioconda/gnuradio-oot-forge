@@ -10,7 +10,7 @@ context:
   base_version: "1.0.0"
   date_str: "20250214"
   version: ${{ base_version }}.post${{ date_str }}+g${{ git_rev[:7] }}
-  build: "2"
+  build: "3"
 
 recipe:
   name: ${{ name|lower }}
