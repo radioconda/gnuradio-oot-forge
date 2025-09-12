@@ -1,0 +1,30 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v1.1.0
+_src_path: /home/rvolz/repos/gnuradio-oot-recipe-template/
+description: 'Python block that updates a GNU Radio variable with the absolute frequency
+
+    as provided by Gpredict. This allows for Doppler shift corrected reception
+
+    of satellite signals.'
+example_flowgraphs: test_doppler
+git_branch: master
+git_url: https://github.com/ghostop14/gr-gpredict-doppler.git
+grc_blocks: 'gpredict_PairToVar
+
+    gpredict_VarToMsg
+
+    gpredict_azel_limit
+
+    gpredict_doppler
+
+    gpredict_rotor
+
+    gpredict_vel_doppler'
+installs_examples: true
+installs_grc_blocks: true
+license: GPL-3.0-or-later
+license_file: LICENSE
+maintainer_username: ryanvolz
+oot_name: gpredict-doppler
+python_only: true
+summary: GNU Radio Gpredict Doppler shift correction block

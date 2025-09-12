@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
   oot_name: gpredict-doppler
-  name: gnuradio-${{ oot_name }}
+  name: gnuradio-gpredict-doppler
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/radioconda/gr-gpredict-doppler.git
@@ -71,22 +71,24 @@ tests:
       files:
         # Example flowgraphs
         - ${{ "Library/" if win }}share/gnuradio/examples/gpredict_doppler/test_doppler.grc
-
         # GRC blocks
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_gpredict_PairToVar.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_gpredict_VarToMsg.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_gpredict_azel_limit.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_gpredict_doppler.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_gpredict_rotor.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_gpredict_vel_doppler.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict-doppler_gpredict_PairToVar.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict-doppler_gpredict_VarToMsg.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict-doppler_gpredict_azel_limit.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict-doppler_gpredict_doppler.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict-doppler_gpredict_rotor.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/gpredict-doppler_gpredict_vel_doppler.block.yml
   #- script:
-      ## Verify that example flowgraphs can be generated
-     #- if: unix
-       #then: |
-         #grcc $PREFIX/share/gnuradio/examples/gpredict_doppler/test_doppler.grc
-     #- if: win
-       #then: |
-         #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\gpredict_doppler\\test_doppler.grc
+      #- if: unix
+        #then: |
+          ## Put commands that test the package on Linux or macOS below
+          ## Verify that example flowgraphs can be generated
+          #grcc $PREFIX/share/gnuradio/examples/gpredict_doppler/test_doppler.grc
+      #- if: win
+        #then: |
+          #:: Put commands that test the package on Windows below
+          #:: Verify that example flowgraphs can be generated
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\gpredict_doppler\\test_doppler.grc
     #requirements:
       #run:
         #- gnuradio-grc
