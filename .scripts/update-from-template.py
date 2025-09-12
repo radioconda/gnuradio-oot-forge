@@ -1,9 +1,9 @@
 import argparse
 import os
 import subprocess
-import traceback
 from pathlib import Path
 
+import git
 import yaml
 
 
@@ -23,6 +23,14 @@ def replace_context(recipe_str, new_context_line):
 def run_copier_update(recipe_path, bump_build=False, copier_arg_list=None):
     """Run `copier update` to update recipe from template."""
     print(f"Updating recipe from template for: {recipe_path.parent}")
+
+    # stash current state of the git repo so copier update has a clean repo to work with
+    repo = git.Repo(recipe_path.parent, search_parent_directories=True)
+    if repo.is_dirty(untracked_files=True):
+        repo.git.stash("push", "--include-untracked")
+        repo_has_stash = True
+    else:
+        repo_has_stash = False
 
     run_args = [
         "copier",
@@ -50,6 +58,22 @@ def run_copier_update(recipe_path, bump_build=False, copier_arg_list=None):
             if orig_recipe_str.endswith("\n"):
                 recipe_str += "\n"
             recipe_path.write_text(recipe_str)
+
+    if repo_has_stash:
+        try:
+            # stage any changes so we can pop the stash
+            repo.git.add("--update")
+            # pop the stash to get back the state before the copier update
+            repo.git.stash("pop")
+            # reset the staged changes so all changes are not staged
+            repo.git.reset()
+        except git.exc.GitCommandError:
+            # restore to state before copier update ran
+            repo.git.reset("--hard", "HEAD")
+            # now we can pop the stash cleanly
+            repo.git.stash("pop")
+            # re-raise the exception to abort
+            raise
 
 
 def main():
@@ -82,9 +106,6 @@ def main():
             )
         except KeyboardInterrupt:
             break
-        except Exception:
-            tb = traceback.format_exc()
-            print(f"Error updating {recipe_path.parent}: {tb}")
 
 
 if __name__ == "__main__":
