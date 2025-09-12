@@ -61,6 +61,7 @@ license-expression = ">=30.4.1,<31"
 
 [feature.template.tasks]
 generate = "python .scripts/generate-from-template.py"
+update-from-template = "python .scripts/update-from-template.py"
 
 [feature.update-versions.dependencies]
 gitpython = "*"
