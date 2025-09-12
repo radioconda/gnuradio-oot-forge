@@ -1,5 +1,5 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: v1.0.1
+_commit: v1.1.0
 _src_path: https://github.com/radioconda/gnuradio-oot-recipe-template
 description: 'This project was developed to demonstrate the possibility of real-time
     DECT
@@ -38,4 +38,5 @@ license: GPL-3.0-or-later
 license_file: LICENSE
 maintainer_username: ryanvolz
 oot_name: dect2
+python_only: false
 summary: GNU Radio module for DECT voice channel decoding
