@@ -79,7 +79,7 @@ cxx_compiler_version:
 fmt: '11'
 gnuradio_core: 3.10.12
 libboost_devel: '1.86'
-numpy: '2.0'
+numpy: '2'
 pyqt: '5.15'
 python:
 - 3.10.* *_cpython

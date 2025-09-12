@@ -83,7 +83,7 @@ glew:
 gnuradio_core: 3.10.12
 libboost_devel: '1.86'
 libpng: '1.6'
-numpy: '2.0'
+numpy: '2'
 python:
 - 3.10.* *_cpython
 - 3.11.* *_cpython
