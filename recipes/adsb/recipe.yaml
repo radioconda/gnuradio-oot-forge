@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
   oot_name: adsb
-  name: gnuradio-${{ oot_name }}
+  name: gnuradio-adsb
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/radioconda/gr-adsb.git
@@ -76,26 +76,28 @@ requirements:
 tests:
   - python:
       imports:
-        - gnuradio.${{ oot_name }}
-        - gnuradio.${{ oot_name }}.webserver
+        - gnuradio.adsb
+        - gnuradio.adsb.webserver
       pip_check: false
   - package_contents:
       files:
         # Example flowgraphs
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/adsb_rx.grc
-
+        - ${{ "Library/" if win }}share/gnuradio/examples/adsb/adsb_rx.grc
         # GRC blocks
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_decoder.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_demod.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_framer.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/adsb_decoder.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/adsb_demod.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/adsb_framer.block.yml
   #- script:
-      ## Verify that example flowgraphs can be generated
       #- if: unix
         #then: |
-          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/adsb_rx.grc
+          ## Put commands that test the package on Linux or macOS below
+          ## Verify that example flowgraphs can be generated
+          #grcc $PREFIX/share/gnuradio/examples/adsb/adsb_rx.grc
       #- if: win
         #then: |
-          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\adsb_rx.grc
+          #:: Put commands that test the package on Windows below
+          #:: Verify that example flowgraphs can be generated
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\adsb\\adsb_rx.grc
     #requirements:
       #run:
         #- gnuradio-grc
@@ -108,7 +110,7 @@ about:
   homepage: https://github.com/mhostetter/gr-adsb
   license: GPL-3.0-or-later
   license_file: COPYING
-  summary: GNU Radio module to demodulate and decode ADS-B messages
+  summary: GNU Radio OOT module to demodulate and decode ADS-B messages
   description: >
     A GNU Radio out-of-tree (OOT) module to demodulate and decode Automatic
     Dependent Surveillance Broadcast (ADS-B) messages.
@@ -118,8 +120,8 @@ about:
 
     Example gnuradio-companion flowgraphs are installed with the package and
     can be found in:
-        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/${{ oot_name }}`
-        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\${{ oot_name }}`
+        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/adsb`
+        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\adsb`
 
 extra:
   recipe-maintainers:
