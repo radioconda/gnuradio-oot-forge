@@ -47,7 +47,6 @@ c_stdlib_version:
   then: '10.13'
 - if: target_platform == 'osx-arm64'
   then: '11.0'
-channel_sources: conda-forge
 channel_targets: gnuradio-oot-forge main
 cxx_compiler:
 - if: target_platform == 'linux-64'
