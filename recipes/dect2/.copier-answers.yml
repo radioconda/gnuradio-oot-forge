@@ -1,0 +1,41 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v1.0.1
+_src_path: https://github.com/radioconda/gnuradio-oot-recipe-template
+description: 'This project was developed to demonstrate the possibility of real-time
+    DECT
+
+    voice channel decoding by GNU Radio. It allows to listen to a voice when
+
+    encryption isn''t applied. As an example DECT digital baby monitors don''t
+
+    perform encryption.
+
+
+    Usage of this project for phone connection eavesdropping may be illegal in
+
+    some countries.'
+example_flowgraphs: 'dect2
+
+    dect2_b200
+
+    dect2_Hackrf
+
+    dect2_plutosdr
+
+    dect2_soapy'
+git_branch: master
+git_url: https://github.com/pavelyazev/gr-dect2.git
+grc_blocks: 'console
+
+    packet_decoder
+
+    packet_receiver
+
+    phase_diff'
+installs_examples: true
+installs_grc_blocks: true
+license: GPL-3.0-or-later
+license_file: LICENSE
+maintainer_username: ryanvolz
+oot_name: dect2
+summary: GNU Radio module for DECT voice channel decoding
