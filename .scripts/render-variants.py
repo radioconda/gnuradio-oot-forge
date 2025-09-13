@@ -5,12 +5,12 @@ import json
 import os
 import subprocess
 import tempfile
-import tomllib
 import traceback
 from pathlib import Path
 
 import rich.console
 import rich.markdown
+import tomllib
 import yaml
 
 
@@ -31,7 +31,7 @@ def collapse_variant_matrix(variants, extra_ignored_keys=None):
     unique_keys = set()
     unique_keys.update(*tuple(set(v.keys()) for v in variants))
     # remove special variant keys that are not read from the config file
-    ignored_keys = ["build_platform", "target_platform"]
+    ignored_keys = ["build_platform", "channel_sources", "target_platform"]
     if extra_ignored_keys is not None:
         ignored_keys.extend(extra_ignored_keys)
     for key in ignored_keys:

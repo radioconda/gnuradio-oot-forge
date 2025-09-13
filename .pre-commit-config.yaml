@@ -20,6 +20,12 @@ repos:
         language: system
         types: [text]
         stages: [pre-commit, manual]
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+        entry: pixi run --environment=lint check-merge-conflict --assume-in-merge
+        language: system
+        types: [text]
+        stages: [pre-commit, manual]
       - id: ruff
         name: Ruff lint
         entry: pixi run --environment=lint ruff-lint

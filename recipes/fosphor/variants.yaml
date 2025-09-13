@@ -15,18 +15,18 @@ c_compiler:
 - if: target_platform == 'osx-arm64'
   then: clang
 - if: target_platform == 'win-64'
-  then: vs2019
+  then: vs2022
 c_compiler_version:
 - if: target_platform == 'linux-64'
-  then: '13'
+  then: '14'
 - if: target_platform == 'linux-aarch64'
-  then: '13'
+  then: '14'
 - if: target_platform == 'linux-ppc64le'
-  then: '13'
+  then: '14'
 - if: target_platform == 'osx-64'
-  then: '18'
+  then: '19'
 - if: target_platform == 'osx-arm64'
-  then: '18'
+  then: '19'
 c_stdlib:
 - if: target_platform == 'linux-64'
   then: sysroot
@@ -64,18 +64,18 @@ cxx_compiler:
 - if: target_platform == 'osx-arm64'
   then: clangxx
 - if: target_platform == 'win-64'
-  then: vs2019
+  then: vs2022
 cxx_compiler_version:
 - if: target_platform == 'linux-64'
-  then: '13'
+  then: '14'
 - if: target_platform == 'linux-aarch64'
-  then: '13'
+  then: '14'
 - if: target_platform == 'linux-ppc64le'
-  then: '13'
+  then: '14'
 - if: target_platform == 'osx-64'
-  then: '18'
+  then: '19'
 - if: target_platform == 'osx-arm64'
-  then: '18'
+  then: '19'
 freetype: '2'
 glew:
 - if: target_platform == 'win-64'
@@ -83,11 +83,11 @@ glew:
 gnuradio_core: 3.10.12
 libboost_devel: '1.86'
 libpng: '1.6'
-numpy: '2.0'
+numpy: '2'
 python:
-- 3.9.* *_cpython
 - 3.10.* *_cpython
 - 3.11.* *_cpython
 - 3.12.* *_cpython
+- 3.13.* *_cp313
 qt_main: '5.15'
 spdlog: '1.15'
