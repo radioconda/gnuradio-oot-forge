@@ -16,15 +16,15 @@ c_compiler:
   then: clang
 c_compiler_version:
 - if: target_platform == 'linux-64'
-  then: '13'
+  then: '14'
 - if: target_platform == 'linux-aarch64'
-  then: '13'
+  then: '14'
 - if: target_platform == 'linux-ppc64le'
-  then: '13'
+  then: '14'
 - if: target_platform == 'osx-64'
-  then: '18'
+  then: '19'
 - if: target_platform == 'osx-arm64'
-  then: '18'
+  then: '19'
 c_stdlib:
 - if: target_platform == 'linux-64'
   then: sysroot
@@ -61,20 +61,20 @@ cxx_compiler:
   then: clangxx
 cxx_compiler_version:
 - if: target_platform == 'linux-64'
-  then: '13'
+  then: '14'
 - if: target_platform == 'linux-aarch64'
-  then: '13'
+  then: '14'
 - if: target_platform == 'linux-ppc64le'
-  then: '13'
+  then: '14'
 - if: target_platform == 'osx-64'
-  then: '18'
+  then: '19'
 - if: target_platform == 'osx-arm64'
-  then: '18'
+  then: '19'
 gnuradio_core: 3.10.12
 libboost_devel: '1.86'
 numpy: '2.0'
 python:
-- 3.9.* *_cpython
 - 3.10.* *_cpython
 - 3.11.* *_cpython
 - 3.12.* *_cpython
+- 3.13.* *_cp313
