@@ -51,6 +51,9 @@ requirements:
     - pybind11
     - python
     - volk
+    - # run deps needed in host in order to run tests during build
+    - pillow
+    - pyqt *
   run:
     - numpy
     - pillow
@@ -60,6 +63,8 @@ requirements:
     from_package:
       # this only builds against the headers
       - libboost-devel
+      # only a run dep, but needed in host to run tests during build
+      - pyqt
 
 tests:
   - python:
