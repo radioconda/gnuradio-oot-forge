@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
   oot_name: lora_sdr
-  name: gnuradio-${{ oot_name }}
+  name: gnuradio-lora_sdr
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/tapparelj/gr-lora_sdr.git
@@ -62,43 +62,45 @@ requirements:
 tests:
   - python:
       imports:
-        - gnuradio.${{ oot_name }}
+        - gnuradio.lora_sdr
       pip_check: false
   - package_contents:
       include:
-        - gnuradio/${{ oot_name }}/api.h
+        - gnuradio/lora_sdr/api.h
       lib:
-        - ${{ name }}
+        - gnuradio-lora_sdr
       files:
         # Example flowgraphs
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/lora_RX.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/lora_TX.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/tx_rx_functionality_check.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/tx_rx_simulation.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/tx_rx_usrp.grc
-
+        - ${{ "Library/" if win }}share/gnuradio/examples/lora_sdr/lora_RX.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/lora_sdr/lora_TX.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/lora_sdr/tx_rx_functionality_check.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/lora_sdr/tx_rx_simulation.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/lora_sdr/tx_rx_usrp.grc
         # GRC blocks
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_lora_rx.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_lora_tx.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_header.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_header_decoder.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_modulate.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/lora_sdr_lora_rx.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/lora_sdr_lora_tx.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/lora_sdr_header.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/lora_sdr_header_decoder.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/lora_sdr_modulate.block.yml
   #- script:
-      ## Verify that example flowgraphs can be generated
       #- if: unix
         #then: |
-          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/lora_RX.grc
-          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/lora_TX.grc
-          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/tx_rx_functionality_check.grc
-          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/tx_rx_simulation.grc
-          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/tx_rx_usrp.grc
+          ## Put commands that test the package on Linux or macOS below
+          ## Verify that example flowgraphs can be generated
+          #grcc $PREFIX/share/gnuradio/examples/lora_sdr/lora_RX.grc
+          #grcc $PREFIX/share/gnuradio/examples/lora_sdr/lora_TX.grc
+          #grcc $PREFIX/share/gnuradio/examples/lora_sdr/tx_rx_functionality_check.grc
+          #grcc $PREFIX/share/gnuradio/examples/lora_sdr/tx_rx_simulation.grc
+          #grcc $PREFIX/share/gnuradio/examples/lora_sdr/tx_rx_usrp.grc
       #- if: win
         #then: |
-          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\lora_RX.grc
-          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\lora_TX.grc
-          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\tx_rx_functionality_check.grc
-          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\tx_rx_simulation.grc
-          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\tx_rx_usrp.grc
+          #:: Put commands that test the package on Windows below
+          #:: Verify that example flowgraphs can be generated
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\lora_sdr\\lora_RX.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\lora_sdr\\lora_TX.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\lora_sdr\\tx_rx_functionality_check.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\lora_sdr\\tx_rx_simulation.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\lora_sdr\\tx_rx_usrp.grc
     #requirements:
       #run:
         #- gnuradio-grc
@@ -121,16 +123,15 @@ about:
     factor, the coding rate, the bandwidth, the sync word, the presence of an
     explicit header and CRC.<br>
 
-    Example gnuradio-companion flowgraphs are installed with the package and
-    can be found in:
-        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/${{ oot_name }}`
-        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\${{ oot_name }}`
-    <br>
-
     If you find this module useful for your project, please consider citing the
     publication "An Open-Source LoRa Physical Layer Prototype on GNU Radio"
     (<a href="https://ieeexplore.ieee.org/document/9154273">IEEE Xplore</a>,
-    <a href="https://arxiv.org/abs/2002.08208">arXiv</a>)
+    <a href="https://arxiv.org/abs/2002.08208">arXiv</a>)<br>
+
+    Example gnuradio-companion flowgraphs are installed with the package and
+    can be found in:
+        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/lora_sdr`
+        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\lora_sdr`
 
 extra:
   recipe-maintainers:

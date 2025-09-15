@@ -1,0 +1,42 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v1.1.3
+_src_path: https://github.com/radioconda/gnuradio-oot-recipe-template
+description: "This is the fully-functional GNU Radio software-defined radio (SDR)\n\
+    implementation of a LoRa transceiver with all the necessary receiver\ncomponents\
+    \ to operate correctly even at very low SNRs. The transceiver is\navailable as\
+    \ a module for GNU Radio 3.10. This work has been conducted at\nthe Telecommunication\
+    \ Circuits Laboratory, EPFL.<br>\n\nIn the GNU Radio implementation of the LoRa\
+    \ Tx and Rx chains the user can\nchoose all the parameters of the transmission,\
+    \ such as the spreading\nfactor, the coding rate, the bandwidth, the sync word,\
+    \ the presence of an\nexplicit header and CRC.<br>\n    \nIf you find this module\
+    \ useful for your project, please consider citing the\npublication \"An Open-Source\
+    \ LoRa Physical Layer Prototype on GNU Radio\"\n(<a href=\"https://ieeexplore.ieee.org/document/9154273\"\
+    >IEEE Xplore</a>,\n<a href=\"https://arxiv.org/abs/2002.08208\">arXiv</a>)<br>"
+example_flowgraphs: 'lora_RX
+
+    lora_TX
+
+    tx_rx_functionality_check
+
+    tx_rx_simulation
+
+    tx_rx_usrp'
+git_branch: master
+git_url: https://github.com/tapparelj/gr-lora_sdr.git
+grc_blocks: 'lora_rx
+
+    lora_tx
+
+    header
+
+    header_decoder
+
+    modulate'
+installs_examples: true
+installs_grc_blocks: true
+license: GPL-3.0-or-later
+license_file: LICENSE
+maintainer_username: ryanvolz
+oot_name: lora_sdr
+python_only: false
+summary: GNU Radio software-defined radio (SDR) implementation of a LoRa transceiver
