@@ -19,6 +19,10 @@ package:
 source:
   git: ${{ git_url }}
   rev: ${{ git_rev }}
+  patches:
+    - 0001-examples-Make-image-path-relative-so-it-can-be-run-a.patch
+    - 0002-cmake-Install-examples.patch
+    - 0003-python-Fix-installation-of-Python-binding-module-on-.patch
 
 build:
   number: ${{ build }}
@@ -77,6 +81,8 @@ tests:
       lib:
         - gnuradio-tempest
       files:
+        # Example flowgraphs
+        - ${{ "Library/" if win }}share/gnuradio/examples/tempest/manual_simulated_tempest_example.grc
         # GRC blocks
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_Hsync.block.yml
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_fft_peak_fine_sampling_sync.block.yml
@@ -95,11 +101,22 @@ tests:
       - if: unix
         then: |
           # Put commands that test the package on Linux or macOS below
+          # Verify that example flowgraphs can be generated
+          grcc $PREFIX/share/gnuradio/examples/tempest/manual_simulated_tempest_example.grc
+          timeout --preserve-status 30 python manual_simulated_tempest_example.py || [ $? -eq 143 ]]
       - if: win
         then: |
           :: Put commands that test the package on Windows below
+          :: Verify that example flowgraphs can be generated
+          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\tempest\\manual_simulated_tempest_example.grc
+          start python manual_simulated_tempest_example.py && ping -n 30 127.0.0.1 >nul && taskkill /fi "WINDOWTITLE eq Manual Simulated Tempest Example" /im python.exe /f
+    files:
+      source:
+        - Imagen_800_600.png
     requirements:
       run:
+        - gnuradio-grc
+        - gnuradio-video-sdl
 
 about:
   homepage: https://github.com/git-artes/gr-tempest
@@ -124,6 +141,10 @@ about:
       doi={10.1109/AsianHOST56390.2022.10022149}}
     ````
 
+    Example gnuradio-companion flowgraphs are installed with the package and
+    can be found in:
+        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/tempest`
+        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\tempest`
 extra:
   recipe-maintainers:
     - ryanvolz

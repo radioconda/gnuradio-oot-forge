@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ryan Volz <ryan.volz@gmail.com>
+Date: Mon, 15 Sep 2025 18:36:44 -0400
+Subject: [PATCH] examples: Make image path relative so it can be run
+ automatically
+
+---
+ examples/manual_simulated_tempest_example.grc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/examples/manual_simulated_tempest_example.grc b/examples/manual_simulated_tempest_example.grc
+index ea5ae35..1bc5584 100644
+--- a/examples/manual_simulated_tempest_example.grc
++++ b/examples/manual_simulated_tempest_example.grc
+@@ -594,7 +594,7 @@ blocks:
+     affinity: ''
+     alias: ''
+     comment: ''
+-    image_file: /home/gnuradio/persistent/gr-tempest/Imagen_800_600.png
++    image_file: Imagen_800_600.png
+     maxoutbuf: '0'
+     minoutbuf: '0'
+     repeatmode: '1'
+--
+2.34.1

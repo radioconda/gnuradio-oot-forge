@@ -23,6 +23,7 @@ description: "An implementation of TEMPEST in GNU Radio. TEMPEST (or [Van Eck Ph
     \ (AsianHOST)}, \n  title={gr-tempest: an open-source GNU Radio implementation\
     \ of TEMPEST}, \n  year={2022},\n  doi={10.1109/AsianHOST56390.2022.10022149}}\
     \ \n````"
+example_flowgraphs: manual_simulated_tempest_example
 git_branch: master
 git_url: https://github.com/git-artes/gr-tempest
 grc_blocks: 'Hsync
@@ -50,7 +51,7 @@ grc_blocks: 'Hsync
     sync_detector
 
     tempest_msgbtn'
-installs_examples: false
+installs_examples: true
 installs_grc_blocks: true
 license: GPL-3.0-or-later
 license_file: LICENSE.GPLv3

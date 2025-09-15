@@ -1,0 +1,66 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ryan Volz <ryan.volz@gmail.com>
+Date: Mon, 15 Sep 2025 18:45:03 -0400
+Subject: [PATCH] cmake: Install examples
+
+---
+ CMakeLists.txt          |  1 +
+ examples/CMakeLists.txt | 35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
+ create mode 100644 examples/CMakeLists.txt
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a3466ef..70ef368 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -125,6 +125,7 @@ add_subdirectory(include/gnuradio/tempest)
+ add_subdirectory(lib)
+ add_subdirectory(apps)
+ add_subdirectory(docs)
++add_subdirectory(examples)
+ # NOTE: manually update below to use GRC to generate C++ flowgraphs w/o python
+ if(ENABLE_PYTHON)
+   message(STATUS "PYTHON and GRC components are enabled")
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+new file mode 100644
+index 0000000..5f26f18
+--- /dev/null
++++ b/examples/CMakeLists.txt
+@@ -0,0 +1,35 @@
++# Copyright 2025 Ryan Volz
++#
++# This file is part of gr-tempest
++#
++# SPDX-License-Identifier: GPL-3.0-or-later
++#
++
++install(
++    FILES automatic_tempest_example_equalization_hd.grc
++          automatic_tempest_example.grc
++          FFT_autocorrelate.grc
++          FFT_crosscorrelate.grc
++          gr_tempest_v2-0-0_HDMI_fs_50MHz_fc_148-5MHz.grc
++          gr_tempest_v2-0-0_HDMI_fs_50MHz_fc_300MHz.grc
++          gr_tempest_v2-0-0_InferScreenResolution_fs_50MHz_fc_300MHz.grc
++          gr_tempest_v2-0-0_VGA_fs_50MHz_fc_300MHz_TakesRealPartOutput.grc
++          gr_tempest_v2-0-0_VGA_fs_50MHz_fc_300MHz.grc
++          infer_screen_example.grc
++          Keep_1_in_N_frames.grc
++          manual_simulated_tempest_example.grc
++          manual_tempest_example_FFT_peaks_hd_and_EQ.grc
++          manual_tempest_example_FFT_peaks_hd.grc
++          manual_tempest_example_HDMI_Real_and_CentralFreqCorrection.grc
++          manual_tempest_example.grc
++          manual_tempest_hdmi_example.grc
++          msg_btn_example.grc
++          semi_automatic_tempest_example.grc
++          semi_automatic_tempest_hdmi_example.grc
++          Demo/HDMI_50MHzSps_300MHzCentral_Magnitude.grc
++          Demo/HDMI_50MHzSps_300MHzCentral_Real.grc
++          Demo/HDMI_50MHzSps_1485MHzCentral_Magnitude.grc
++          Demo/InferScreenResolution_50MSps_300MHzCentral.grc
++          Demo/VGA_50MHzSps_300MHzCentral_Magnitude.grc
++          Demo/VGA_50MHzSps_300MHzCentral_Real.grc
++    DESTINATION share/gnuradio/examples/tempest)
+--
+2.34.1
