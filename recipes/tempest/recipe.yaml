@@ -116,6 +116,7 @@ tests:
     requirements:
       run:
         - gnuradio-grc
+        - gnuradio-qtgui
         - gnuradio-video-sdl
 
 about:
