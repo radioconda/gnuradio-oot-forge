@@ -17,6 +17,9 @@ cmake -E make_directory buildconda
 cd buildconda
 
 cmake_config_args=(
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_INSTALL_PREFIX=$PREFIX
+    -DCMAKE_PREFIX_PATH=$PREFIX
     -DCPM_sgp4_SOURCE="$SRC_DIR/sgp4"
     -DLIB_SUFFIX=""
     -DENABLE_DOXYGEN=OFF
@@ -29,4 +32,9 @@ cmake --build . --config Release --target install
 
 if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR}" != "" ]]; then
     ctest --build-config Release --output-on-failure --timeout 120 -j${CPU_COUNT}
+fi
+
+# clean up fontconfig cache generated during testing so it's not in package
+if [[ $target_platform == linux* ]] ; then
+    rm -rf $PREFIX/var/cache
 fi
