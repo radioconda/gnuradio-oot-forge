@@ -1,0 +1,34 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v1.1.3
+_src_path: https://github.com/radioconda/gnuradio-oot-recipe-template
+description: 'GNU Radio module for HPSDR Hermes / Metis, and Red Pitaya (using OpenHPSDR
+
+    protocol 1).
+
+
+    * hermesNB sources decimated downconverted 48K-to-384K receiver complex
+
+    stream(s), and sinks one 48k sample rate transmit complex stream.
+
+    * hermesWB sources raw ADC samples as a vector of floats, with vlen=16384.
+
+    Each individual vector contains time contiguous samples. However there are
+
+    large time gaps between between vectors. This is how HPSDR produces raw
+
+    samples, it is due to Ethernet interface rate limitations between HPSDR and
+
+    the host computer.'
+git_branch: gr_3.10
+git_url: https://github.com/Tom-McDermott/gr-hpsdr.git
+grc_blocks: 'hermesNB
+
+    hermesWB'
+installs_examples: false
+installs_grc_blocks: true
+license: GPL-3.0-or-later
+license_file: license.txt
+maintainer_username: ryanvolz
+oot_name: hpsdr
+python_only: false
+summary: GNU Radio module for HPSDR Hermes / Metis, and Red Pitaya
