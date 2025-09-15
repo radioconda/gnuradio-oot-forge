@@ -45,8 +45,12 @@ ruff-lint = "ruff check --fix --exit-non-zero-on-fix --force-exclude"
 
 [feature.recipe.dependencies]
 python = ">=3.11"
-pyyaml = "*"
+pyyaml = ">=6.0.2,<7"
 rich = ">=13.9.4,<14"
+
+[feature.git.dependencies]
+gitpython = ">=3.1.45,<4"
+setuptools_scm = ">=9.2.0,<10"
 
 [feature.render-variants.dependencies]
 conda-forge-pinning = "*"
@@ -64,8 +68,6 @@ generate = "python .scripts/generate-from-template.py"
 update-from-template = "python .scripts/update-from-template.py"
 
 [feature.update-versions.dependencies]
-gitpython = "*"
-setuptools_scm = "*"
 
 [feature.update-versions.tasks]
 update-versions = "python .scripts/update-versions.py"
@@ -73,5 +75,5 @@ update-versions = "python .scripts/update-versions.py"
 [environments]
 lint = {features = ["lint"], no-default-feature=true}
 render-variants = ["recipe", "render-variants"]
-update-versions = {features = ["recipe", "update-versions"], no-default-feature=true}
-template = {features = ["recipe", "update-versions", "template"], no-default-feature=true}
+update-versions = {features = ["recipe", "git", "update-versions"], no-default-feature=true}
+template = {features = ["recipe", "git", "template"], no-default-feature=true}
