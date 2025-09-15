@@ -1,0 +1,60 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v1.1.3
+_src_path: https://github.com/radioconda/gnuradio-oot-recipe-template
+description: "An implementation of TEMPEST in GNU Radio. TEMPEST (or [Van Eck Phreaking](https://en.wikipedia.org/wiki/Van_Eck_phreaking))\
+    \ is a technique to eavesdrop video monitors by receiving the electromagnetic\
+    \ signal emitted by the VGA/HDMI cable and connectors (although other targets\
+    \ are possible, such as keyboards, for which the same term is generally used,\
+    \ see [Wikipedia/Tempest](https://en.wikipedia.org/wiki/Tempest_(codename))).\
+    \ \n\nThis is basically a re-implementation of Martin Marinov's excellent TempestSDR\
+    \ in GNU Radio (see https://github.com/martinmarinov/TempestSDR). The reason is\
+    \ that I felt it may be easier to maintain and extend. Note however that the basic\
+    \ ideas were imitated, but the synchronization algorithms are different, and some\
+    \ functionalities (particularly in the GUI) are missing. \n\nFor a technical explanation\
+    \ you may read [Marinov's thesis](https://github.com/martinmarinov/TempestSDR/raw/master/documentation/acs-dissertation.pdf)\
+    \ or [Pablo Menoni's thesis](https://iie.fing.edu.uy/publicaciones/2018/Men18/)\
+    \ (in spanish). You may also watch [my presentation at GRCon21](https://youtu.be/k_vsFspGpAA)\
+    \ (in English), which includes a technical overview and several demos.\n\n**If\
+    \ you find the code useful, please consider starring the repository or citing\
+    \ [our paper](https://iie.fing.edu.uy/publicaciones/2022/LBCS22/LBCS22.pdf). This\
+    \ will help us get funding to support the project.**\n\n````\n@INPROCEEDINGS{larroca2022gr_tempest,\n\
+    \  author={Larroca, Federico and Bertrand, Pablo and Carrau, Felipe and Severi,\
+    \ Victoria},\n  booktitle={2022 Asian Hardware Oriented Security and Trust Symposium\
+    \ (AsianHOST)}, \n  title={gr-tempest: an open-source GNU Radio implementation\
+    \ of TEMPEST}, \n  year={2022},\n  doi={10.1109/AsianHOST56390.2022.10022149}}\
+    \ \n````"
+git_branch: master
+git_url: https://github.com/git-artes/gr-tempest
+grc_blocks: 'Hsync
+
+    fft_peak_fine_sampling_sync
+
+    fine_sampling_synchronization
+
+    frame_drop
+
+    framing
+
+    image_source
+
+    infer_screen_resolution
+
+    message_to_var
+
+    normalize_flow
+
+    sampling_synchronization
+
+    ssamp_correction
+
+    sync_detector
+
+    tempest_msgbtn'
+installs_examples: false
+installs_grc_blocks: true
+license: GPL-3.0-or-later
+license_file: LICENSE.GPLv3
+maintainer_username: ryanvolz
+oot_name: tempest
+python_only: false
+summary: TEMPEST reception of video monitor signals using GNU Radio
