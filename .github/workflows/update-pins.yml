@@ -28,7 +28,7 @@ jobs:
 
       - name: Update pinned variants
         run: |
-          pixi run render-variants --bump-build --summary-output body.md
+          pixi run --environment render-variants render-variants --bump-build --summary-output body.md
 
       - name: Check for changed variants
         uses: tj-actions/verify-changed-files@v20

@@ -23,7 +23,7 @@ jobs:
 
       - name: Update package versions
         run: |
-          pixi run update-versions --summary-output update.md
+          pixi run --environment update-versions update-versions --summary-output update.md
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
