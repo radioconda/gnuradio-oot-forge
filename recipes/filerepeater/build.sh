@@ -12,6 +12,9 @@ cmake -E make_directory buildconda
 cd buildconda
 
 cmake_config_args=(
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_INSTALL_PREFIX=$PREFIX
+    -DCMAKE_PREFIX_PATH=$PREFIX
     -DLIB_SUFFIX=""
     -DENABLE_DOXYGEN=OFF
     -DENABLE_TESTING=ON

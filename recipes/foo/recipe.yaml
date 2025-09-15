@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
   oot_name: foo
-  name: gnuradio-${{ oot_name }}
+  name: gnuradio-foo
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/radioconda/gr-foo.git
@@ -58,26 +58,26 @@ requirements:
 tests:
   - python:
       imports:
-        - ${{ oot_name }}
+        - foo
       pip_check: false
   - package_contents:
       include:
-        - ${{ oot_name }}/api.h
+        - foo/api.h
       lib:
-        - ${{ name }}
+        - gnuradio-foo
       files:
         # GRC blocks
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_burst_tagger.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_channel_model.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_packet_dropper.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_packet_pad2.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_pad_tagged_stream.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_periodic_msg_source.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_random_periodic_msg_source.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_rtt_measure.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_selector.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_valve.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_wireshark_connector.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/foo_burst_tagger.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/foo_channel_model.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/foo_packet_dropper.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/foo_packet_pad2.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/foo_pad_tagged_stream.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/foo_periodic_msg_source.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/foo_random_periodic_msg_source.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/foo_rtt_measure.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/foo_selector.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/foo_valve.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/foo_wireshark_connector.block.yml
 
 about:
   homepage: https://github.com/bastibl/gr-foo

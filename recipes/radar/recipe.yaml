@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
   oot_name: radar
-  name: gnuradio-${{ oot_name }}
+  name: gnuradio-radar
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/radioconda/gr-radar.git
@@ -73,19 +73,16 @@ requirements:
 tests:
   - python:
       imports:
-        - gnuradio.${{ oot_name }}
+        - gnuradio.radar
       pip_check: false
   - package_contents:
       include:
-        - gnuradio/${{ oot_name }}/api.h
-        - gnuradio/${{ oot_name }}/estimator_cw.h
-        - gnuradio/${{ oot_name }}/tracking_singletarget.h
+        - gnuradio/radar/api.h
       lib:
-        - ${{ name }}
+        - gnuradio-radar
       files:
-        # example flowgraphs
+        # Example flowgraphs
         - ${{ "Library/" if win }}share/gnuradio/examples/radar/simulator_cw.grc
-
         # GRC blocks
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/radar_crop_matrix_vcvc.block.yml
         - ${{ "Library/" if win }}share/gnuradio/grc/blocks/radar_estimator_cw.block.yml
@@ -106,10 +103,14 @@ tests:
   #- script:
       #- if: unix
         #then: |
-          #grcc $PREFIX/share/gnuradio/examples/radar/simulator_ofdm.grc
+          ## Put commands that test the package on Linux or macOS below
+          ## Verify that example flowgraphs can be generated
+          #grcc $PREFIX/share/gnuradio/examples/radar/simulator_cw.grc
       #- if: win
         #then: |
-          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\radar\\simulator_ofdm.grc
+          #:: Put commands that test the package on Windows below
+          #:: Verify that example flowgraphs can be generated
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\radar\\simulator_cw.grc
     #requirements:
       #run:
         #- gnuradio-grc

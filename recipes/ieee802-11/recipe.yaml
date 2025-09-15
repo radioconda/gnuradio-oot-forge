@@ -1,16 +1,16 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
   oot_name: ieee802_11
-  name: gnuradio-${{ oot_name }}
+  name: gnuradio-ieee802_11
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/radioconda/gr-ieee802-11.git
   git_branch: updates
-  git_rev: 761bdd9e2dcb0cf161b4ff120daeee6ce8ef60c4
+  git_rev: bf25796892c0e8ed624512de486a7ed5fd3d320e
   base_version: "0.0.0"
-  date_str: "20250304"
+  date_str: "20250915"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
-  build: "3"
+  build: "0"
 
 package:
   name: ${{ name|lower }}
@@ -66,42 +66,44 @@ requirements:
 tests:
   - python:
       imports:
-        - ${{ oot_name }}
+        - ieee802_11
       pip_check: false
   - package_contents:
       include:
-        - ${{ oot_name }}/api.h
+        - ieee802_11/api.h
       lib:
-        - ${{ name }}
+        - gnuradio-ieee802_11
       files:
         # Example flowgraphs
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/wifi_loopback.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/wifi_phy_hier.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/wifi_rx.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/wifi_transceiver.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/wifi_tx.grc
-
+        - ${{ "Library/" if win }}share/gnuradio/examples/ieee802_11/wifi_loopback.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/ieee802_11/wifi_phy_hier.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/ieee802_11/wifi_rx.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/ieee802_11/wifi_transceiver.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/ieee802_11/wifi_tx.grc
         # GRC blocks
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_chunks_to_symbols.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_decode_mac.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_ether_encap.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_extract_csi.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_frame_equalizer.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_mac.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_mapper.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_parse_mac.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_sync_long.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_sync_short.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/ieee802_11_chunks_to_symbols.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/ieee802_11_decode_mac.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/ieee802_11_ether_encap.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/ieee802_11_extract_csi.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/ieee802_11_frame_equalizer.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/ieee802_11_mac.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/ieee802_11_mapper.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/ieee802_11_parse_mac.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/ieee802_11_sync_long.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/ieee802_11_sync_short.block.yml
   #- script:
-      ## Verify that example flowgraphs can be generated
       #- if: unix
         #then: |
-          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/wifi_phy_hier.grc
-          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/wifi_rx.grc
+          ## Put commands that test the package on Linux or macOS below
+          ## Verify that example flowgraphs can be generated
+          #grcc $PREFIX/share/gnuradio/examples/ieee802_11/wifi_phy_hier.grc
+          #grcc $PREFIX/share/gnuradio/examples/ieee802_11/wifi_rx.grc
       #- if: win
         #then: |
-          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\wifi_phy_hier.grc
-          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\wifi_rx.grc
+          #:: Put commands that test the package on Windows below
+          #:: Verify that example flowgraphs can be generated
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\ieee802_11\\wifi_phy_hier.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\ieee802_11\\wifi_rx.grc
     #requirements:
       #run:
         #- gnuradio-grc
@@ -121,8 +123,8 @@ about:
 
     Example gnuradio-companion flowgraphs are installed with the package and
     can be found in:
-        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/${{ oot_name }}`
-        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\${{ oot_name }}`
+        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/ieee802_11`
+        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\ieee802_11`
 
 extra:
   recipe-maintainers:

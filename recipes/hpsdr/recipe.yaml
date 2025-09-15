@@ -1,16 +1,16 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
   oot_name: hpsdr
-  name: gnuradio-${{ oot_name }}
+  name: gnuradio-hpsdr
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
-  git_url: https://github.com/radioconda/gr-hpsdr.git
-  git_branch: updates
+  git_url: https://github.com/Tom-McDermott/gr-hpsdr.git
+  git_branch: gr_3.10
   git_rev: 7748cc99fbe1e49642aee973b9c70bdc130800a6
-  base_version: "0.0.0"
+  base_version: "3.10"
   date_str: "20250304"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
-  build: "2"
+  build: "0"
 
 package:
   name: ${{ name|lower }}
@@ -63,16 +63,17 @@ requirements:
 tests:
   - python:
       imports:
-        - gnuradio.${{ oot_name }}
+        - gnuradio.hpsdr
       pip_check: false
   - package_contents:
       include:
-        - gnuradio/${{ oot_name }}/api.h
+        - gnuradio/hpsdr/api.h
       lib:
-        - ${{ name }}
+        - gnuradio-hpsdr
       files:
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_hermesNB.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_hermesWB.block.yml
+        # GRC blocks
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/hpsdr_hermesNB.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/hpsdr_hermesWB.block.yml
 
 about:
   homepage: https://github.com/Tom-McDermott/gr-hpsdr

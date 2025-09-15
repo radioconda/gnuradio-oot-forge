@@ -7,9 +7,10 @@ cd buildconda
 
 :: configure
 cmake -G "Ninja" %CMAKE_ARGS% ^
+    -DCMAKE_BUILD_TYPE=Release ^
     -DCMAKE_INSTALL_PREFIX="%PREFIX%\Library" ^
     -DCMAKE_PREFIX_PATH="%PREFIX%\Library" ^
-    -DGR_PYTHON_DIR:PATH="%SP_DIR%" ^
+    -DGR_PYTHON_DIR="%SP_DIR%" ^
     -DENABLE_DOXYGEN=OFF ^
     -DENABLE_GLFW=ON ^
     -DENABLE_PNG=ON ^
