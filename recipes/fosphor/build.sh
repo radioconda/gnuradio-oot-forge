@@ -14,6 +14,9 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
 fi
 
 cmake_config_args=(
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_INSTALL_PREFIX=$PREFIX
+    -DCMAKE_PREFIX_PATH=$PREFIX
     -DLIB_SUFFIX=""
     -DENABLE_DOXYGEN=OFF
     -DENABLE_GLFW=ON

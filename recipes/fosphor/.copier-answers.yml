@@ -1,0 +1,24 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v1.1.3
+_src_path: https://github.com/radioconda/gnuradio-oot-recipe-template
+description: "GNU Radio block for RTSA-like spectrum visualization using OpenCL and\n\
+    OpenGL acceleration.\n\nNote: this package does not depend on a specific OpenCL\
+    \ implementation\nand will use an implementation available on your system (not\
+    \ installed\nthrough conda) by default. If you would like to use a particular\
+    \ OpenCL\nimplementation, you can install one of the available conda packages::\n\
+    \n    - pocl (LLVM-based with many device targets)\n    - intel-compute-runtime\
+    \ (Intel Graphics)\n    - beignet (legacy Intel Graphics)\n    - oclgrind (virtual\
+    \ OpenCL device simulator)"
+git_branch: master
+git_url: https://gitea.osmocom.org/sdr/gr-fosphor.git
+grc_blocks: 'glfw_sink_c
+
+    qt_sink_c'
+installs_examples: false
+installs_grc_blocks: true
+license: GPL-3.0-or-later
+license_file: COPYING
+maintainer_username: ryanvolz
+oot_name: fosphor
+python_only: false
+summary: GNU Radio block for spectrum visualization using GPU
