@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
   oot_name: filerepeater
-  name: gnuradio-${{ oot_name }}
+  name: gnuradio-filerepeater
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/radioconda/gr-filerepeater.git
@@ -62,43 +62,45 @@ requirements:
 tests:
   - python:
       imports:
-        - ${{ oot_name }}
+        - filerepeater
       pip_check: false
   - package_contents:
       include:
-        - ${{ oot_name }}/api.h
+        - filerepeater/api.h
       lib:
-        - ${{ name }}
+        - gnuradio-filerepeater
       files:
         # Example flowgraphs
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/sample_flow_sync.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/sample_replay_from_file_with_repeat.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/test_advsink.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/test_stateAnd.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/test_stateOr.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/test_statetimer.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/test_statetobool.grc
-        - ${{ "Library/" if win }}share/gnuradio/examples/${{ oot_name }}/test_timeofday.grc
-
+        - ${{ "Library/" if win }}share/gnuradio/examples/filerepeater/sample_flow_sync.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/filerepeater/sample_replay_from_file_with_repeat.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/filerepeater/test_advsink.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/filerepeater/test_stateAnd.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/filerepeater/test_stateOr.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/filerepeater/test_statetimer.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/filerepeater/test_statetobool.grc
+        - ${{ "Library/" if win }}share/gnuradio/examples/filerepeater/test_timeofday.grc
         # GRC blocks
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_AdvFileSink.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_TimeOfDay.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_file_repeater_ex.block.yml
-        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/${{ oot_name }}_msg_to_file.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/filerepeater_AdvFileSink.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/filerepeater_TimeOfDay.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/filerepeater_file_repeater_ex.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/filerepeater_msg_to_file.block.yml
   #- script:
-      ## Verify that example flowgraphs can be generated
       #- if: unix
         #then: |
-          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/sample_replay_from_file_with_repeat.grc
-          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/test_advsink.grc
-          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/test_stateOr.grc
-          #grcc $PREFIX/share/gnuradio/examples/${{ oot_name }}/test_timeofday.grc
+          ## Put commands that test the package on Linux or macOS below
+          ## Verify that example flowgraphs can be generated
+          #grcc $PREFIX/share/gnuradio/examples/filerepeater/sample_replay_from_file_with_repeat.grc
+          #grcc $PREFIX/share/gnuradio/examples/filerepeater/test_advsink.grc
+          #grcc $PREFIX/share/gnuradio/examples/filerepeater/test_stateOr.grc
+          #grcc $PREFIX/share/gnuradio/examples/filerepeater/test_timeofday.grc
       #- if: win
         #then: |
-          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\sample_replay_from_file_with_repeat.grc
-          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\test_advsink.grc
-          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\test_stateOr.grc
-          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\${{ oot_name }}\\test_timeofday.grc
+          #:: Put commands that test the package on Windows below
+          #:: Verify that example flowgraphs can be generated
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\filerepeater\\sample_replay_from_file_with_repeat.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\filerepeater\\test_advsink.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\filerepeater\\test_stateOr.grc
+          #grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\filerepeater\\test_timeofday.grc
     #requirements:
       #run:
         #- gnuradio-grc
@@ -136,8 +138,8 @@ about:
 
     Example gnuradio-companion flowgraphs are installed with the package and
     can be found in:
-        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/${{ oot_name }}`
-        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\${{ oot_name }}`
+        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/filerepeater`
+        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\filerepeater`
 
 extra:
   recipe-maintainers:

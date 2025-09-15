@@ -1,0 +1,76 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v1.1.3
+_src_path: https://github.com/radioconda/gnuradio-oot-recipe-template
+description: 'A set of GNU Radio blocks with more control over how files are played.
+
+
+    Shows in widgets now as [Advanced File] Group Advanced File Source: Files
+
+    can be started with an initial delay before starting to output data (output
+
+    0''s until the timer is hit), played with delays in between (output 0''s in
+
+    between), or played once then output zero''s rather than just returning no
+
+    samples. The block can also directly play signed8/HackRF and
+
+    unsigned8/RTL-SDR saved IQ data and dynamically convert it to native
+
+    complex.
+
+
+    The delay capabilities can all be useful if you''re trying to combine
+
+    multiple sample files into a single larger signal with different intervals
+
+    or trying to do blind signal analysis and decoding where the standard file
+
+    source repeat option causes signal discontinuities when it restarts.
+
+
+    Flow Input Synchronizer: If you play two file sources (even if you create
+
+    two file source blocks but assign the same file to each), the data point
+
+    flows will not be point-synchronized. The Flow Input Synchronizer is a sync
+
+    block that just puts all inputs and outputs in step. In other words if you
+
+    plotted the same file from two different file sources on a frequency sink
+
+    using this block, the plots would now overlap/align whereas they do not
+
+    without it.'
+example_flowgraphs: 'sample_flow_sync
+
+    sample_replay_from_file_with_repeat
+
+    test_advsink
+
+    test_stateAnd
+
+    test_stateOr
+
+    test_statetimer
+
+    test_statetobool
+
+    test_timeofday'
+git_branch: master
+git_url: https://github.com/ghostop14/gr-filerepeater.git
+grc_blocks: 'AdvFileSink
+
+    TimeOfDay
+
+    file_repeater_ex
+
+    msg_to_file'
+installs_examples: true
+installs_grc_blocks: true
+license: GPL-3.0-or-later
+license_file: LICENSE
+maintainer_username: ryanvolz
+oot_name: filerepeater
+python_only: false
+summary: GNU Radio block to play back files with delays between replays and/or limited
+    replay counts
