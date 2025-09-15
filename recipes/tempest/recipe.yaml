@@ -53,6 +53,8 @@ requirements:
     - volk
   run:
     - numpy
+    - pillow
+    - pyqt
     - python
   ignore_run_exports:
     from_package:
