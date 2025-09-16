@@ -1,0 +1,52 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ryan Volz <ryan.volz@gmail.com>
+Date: Mon, 15 Sep 2025 23:32:23 -0400
+Subject: [PATCH] Fix imports of tempest to be under gnuradio namespace
+
+---
+ grc/tempest_image_source.block.yml   | 2 +-
+ grc/tempest_message_to_var.block.yml | 2 +-
+ grc/tempest_tempest_msgbtn.block.yml | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/grc/tempest_image_source.block.yml b/grc/tempest_image_source.block.yml
+index 1f63055..b87217a 100644
+--- a/grc/tempest_image_source.block.yml
++++ b/grc/tempest_image_source.block.yml
+@@ -3,7 +3,7 @@ label: Image Source
+ category: '[Tempest]'
+
+ templates:
+-  imports: import tempest
++  imports: from gnuradio import tempest
+   make: tempest.image_source(${image_file}, ${Hvisible}, ${Vvisible}, ${Htotal}, ${Vtotal}, ${repeatmode})
+
+ parameters:
+diff --git a/grc/tempest_message_to_var.block.yml b/grc/tempest_message_to_var.block.yml
+index b5a1689..d654c30 100644
+--- a/grc/tempest_message_to_var.block.yml
++++ b/grc/tempest_message_to_var.block.yml
+@@ -15,7 +15,7 @@ inputs:
+
+
+ templates:
+-    imports: import tempest
++    imports: from gnuradio import tempest
+     make: tempest.message_to_var(${ 'self.set_' + context.get('target')() })
+
+ file_format: 1
+diff --git a/grc/tempest_tempest_msgbtn.block.yml b/grc/tempest_tempest_msgbtn.block.yml
+index 5a9b063..257b3ce 100644
+--- a/grc/tempest_tempest_msgbtn.block.yml
++++ b/grc/tempest_tempest_msgbtn.block.yml
+@@ -50,7 +50,7 @@ outputs:
+     optional: false
+
+ templates:
+-    imports: import tempest
++    imports: from gnuradio import tempest
+     var_make: self.${id} = None
+     make: |-
+         <%
+--
+2.34.1

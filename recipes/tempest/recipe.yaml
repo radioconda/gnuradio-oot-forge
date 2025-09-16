@@ -23,6 +23,7 @@ source:
     - 0001-examples-Make-image-path-relative-so-it-can-be-run-a.patch
     - 0002-cmake-Install-examples.patch
     - 0003-python-Fix-installation-of-Python-binding-module-on-.patch
+    - 0004-Fix-imports-of-tempest-to-be-under-gnuradio-namespac.patch
 
 build:
   number: ${{ build }}
