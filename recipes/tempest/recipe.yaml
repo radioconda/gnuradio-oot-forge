@@ -105,6 +105,7 @@ tests:
           # Verify that example flowgraphs can be generated
           grcc $PREFIX/share/gnuradio/examples/tempest/manual_simulated_tempest_example.grc
           QT_QPA_PLATFORM=offscreen SDL_VIDEODRIVER=dummy timeout --preserve-status 15 python manual_simulated_tempest_example.py || [[ $? -eq 143 ]]
+          sleep 1
       - if: win
         then: |
           :: Put commands that test the package on Windows below
