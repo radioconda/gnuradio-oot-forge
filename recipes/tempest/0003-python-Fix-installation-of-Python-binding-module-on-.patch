@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ryan Volz <ryan.volz@gmail.com>
+Date: Mon, 15 Sep 2025 18:49:06 -0400
+Subject: [PATCH] python: Fix installation of Python binding module on Windows
+
+---
+ python/tempest/bindings/CMakeLists.txt | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/python/tempest/bindings/CMakeLists.txt b/python/tempest/bindings/CMakeLists.txt
+index e5324a3..093689f 100644
+--- a/python/tempest/bindings/CMakeLists.txt
++++ b/python/tempest/bindings/CMakeLists.txt
+@@ -44,12 +44,11 @@ GR_PYBIND_MAKE_OOT(tempest
+    gr::tempest
+    "${tempest_python_files}")
+
+-# copy in bindings .so file for use in QA test module
+-add_custom_target(
+-  copy_bindings_for_tests ALL
+-  COMMAND
+-    ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/*.so"
+-    ${CMAKE_BINARY_DIR}/test_modules/gnuradio/tempest/
+-  DEPENDS tempest_python)
++# copy bindings extension for use in QA test module
++add_custom_command(
++    TARGET tempest_python
++    POST_BUILD
++    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:tempest_python>
++            ${PROJECT_BINARY_DIR}/test_modules/gnuradio/tempest/)
+
+ install(TARGETS tempest_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/tempest COMPONENT pythonapi)
+--
+2.34.1

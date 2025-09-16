@@ -1,0 +1,155 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  oot_name: tempest
+  name: gnuradio-tempest
+  # update script relies on `git_url` and `git_branch` and can replace:
+  #   `git_rev`, `base_version`, `date_str`, `build`
+  git_url: https://github.com/git-artes/gr-tempest
+  git_branch: master
+  git_rev: 9df82064515d66ca83f6cc66442ddfdeaf30af83
+  base_version: "0.0.0"
+  date_str: "20250210"
+  version: ${{ base_version }}.post${{ date_str }}+g${{ git_rev[:7] }}
+  build: "0"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  git: ${{ git_url }}
+  rev: ${{ git_rev }}
+  patches:
+    - 0001-examples-Make-image-path-relative-so-it-can-be-run-a.patch
+    - 0002-cmake-Install-examples.patch
+    - 0003-python-Fix-installation-of-Python-binding-module-on-.patch
+    - 0004-Fix-imports-of-tempest-to-be-under-gnuradio-namespac.patch
+
+build:
+  number: ${{ build }}
+  files:
+    exclude:
+      - "**/gdk-pixbuf*"
+      - "**/*.pyc"
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - numpy
+        - pybind11
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake
+    - git
+    - ninja
+    - pkg-config
+  host:
+    - gnuradio-core
+    - libboost-devel
+    - numpy
+    - if: win
+      then: pip
+    - pybind11
+    - python
+    - volk
+    - # run deps needed in host in order to run tests during build
+    - pillow
+    - pyqt *
+  run:
+    - numpy
+    - pillow
+    - pyqt
+    - python
+  ignore_run_exports:
+    from_package:
+      # this only builds against the headers
+      - libboost-devel
+      # only a run dep, but needed in host to run tests during build
+      - pyqt
+
+tests:
+  - python:
+      imports:
+        - gnuradio.tempest
+      pip_check: false
+  - package_contents:
+      include:
+        - gnuradio/tempest/api.h
+      lib:
+        - gnuradio-tempest
+      files:
+        # Example flowgraphs
+        - ${{ "Library/" if win }}share/gnuradio/examples/tempest/manual_simulated_tempest_example.grc
+        # GRC blocks
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_Hsync.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_fft_peak_fine_sampling_sync.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_fine_sampling_synchronization.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_frame_drop.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_framing.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_image_source.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_infer_screen_resolution.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_message_to_var.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_normalize_flow.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_sampling_synchronization.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_ssamp_correction.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_sync_detector.block.yml
+        - ${{ "Library/" if win }}share/gnuradio/grc/blocks/tempest_tempest_msgbtn.block.yml
+  - script:
+      - if: unix
+        then: |
+          # Put commands that test the package on Linux or macOS below
+          # Verify that example flowgraphs can be generated
+          grcc $PREFIX/share/gnuradio/examples/tempest/manual_simulated_tempest_example.grc
+          QT_QPA_PLATFORM=offscreen SDL_VIDEODRIVER=dummy timeout --preserve-status 15 python manual_simulated_tempest_example.py || [[ $? -eq 143 ]]
+          sleep 1
+      - if: win
+        then: |
+          :: Put commands that test the package on Windows below
+          :: Verify that example flowgraphs can be generated
+          grcc %PREFIX%\\Library\\share\\gnuradio\\examples\\tempest\\manual_simulated_tempest_example.grc
+          start python manual_simulated_tempest_example.py && ping -n 10 127.0.0.1 >nul && taskkill /fi "WINDOWTITLE eq Manual Simulated Tempest Example" /im python.exe /f
+    files:
+      source:
+        - Imagen_800_600.png
+    requirements:
+      run:
+        - if: unix
+          then: coreutils
+        - gnuradio-grc
+        - gnuradio-qtgui
+        - gnuradio-video-sdl
+
+about:
+  homepage: https://github.com/git-artes/gr-tempest
+  license: GPL-3.0-or-later
+  license_file: LICENSE.GPLv3
+  summary: TEMPEST reception of video monitor signals using GNU Radio
+  description: >
+    An implementation of TEMPEST in GNU Radio. TEMPEST (or [Van Eck Phreaking](https://en.wikipedia.org/wiki/Van_Eck_phreaking)) is a technique to eavesdrop video monitors by receiving the electromagnetic signal emitted by the VGA/HDMI cable and connectors (although other targets are possible, such as keyboards, for which the same term is generally used, see [Wikipedia/Tempest](https://en.wikipedia.org/wiki/Tempest_(codename))).
+
+    This is basically a re-implementation of Martin Marinov's excellent TempestSDR in GNU Radio (see https://github.com/martinmarinov/TempestSDR). The reason is that I felt it may be easier to maintain and extend. Note however that the basic ideas were imitated, but the synchronization algorithms are different, and some functionalities (particularly in the GUI) are missing.
+
+    For a technical explanation you may read [Marinov's thesis](https://github.com/martinmarinov/TempestSDR/raw/master/documentation/acs-dissertation.pdf) or [Pablo Menoni's thesis](https://iie.fing.edu.uy/publicaciones/2018/Men18/) (in spanish). You may also watch [my presentation at GRCon21](https://youtu.be/k_vsFspGpAA) (in English), which includes a technical overview and several demos.
+
+    **If you find the code useful, please consider starring the repository or citing [our paper](https://iie.fing.edu.uy/publicaciones/2022/LBCS22/LBCS22.pdf). This will help us get funding to support the project.**
+
+    ````
+    @INPROCEEDINGS{larroca2022gr_tempest,
+      author={Larroca, Federico and Bertrand, Pablo and Carrau, Felipe and Severi, Victoria},
+      booktitle={2022 Asian Hardware Oriented Security and Trust Symposium (AsianHOST)},
+      title={gr-tempest: an open-source GNU Radio implementation of TEMPEST},
+      year={2022},
+      doi={10.1109/AsianHOST56390.2022.10022149}}
+    ````
+
+    Example gnuradio-companion flowgraphs are installed with the package and
+    can be found in:
+        - (Linux/macOS) `$CONDA_PREFIX/share/gnuradio/examples/tempest`
+        - (Windows) `%CONDA_PREFIX%\share\gnuradio\examples\tempest`
+extra:
+  recipe-maintainers:
+    - ryanvolz
