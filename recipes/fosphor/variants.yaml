@@ -79,7 +79,7 @@ cxx_compiler_version:
 freetype: '2'
 glew:
 - if: target_platform == 'win-64'
-  then: '2.1'
+  then: '2.2'
 gnuradio_core: 3.10.12
 libboost_devel: '1.86'
 libpng: '1.6'
