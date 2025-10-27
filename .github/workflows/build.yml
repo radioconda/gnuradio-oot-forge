@@ -48,7 +48,7 @@ jobs:
           ls output/**/*.conda
 
       - name: Store artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: pkgs-${{ github.run_id }}-${{ matrix.target }}
           path: output/**/*.conda
