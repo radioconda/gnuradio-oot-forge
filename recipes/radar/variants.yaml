@@ -87,5 +87,5 @@ python:
 - 3.12.* *_cpython
 - 3.13.* *_cp313
 qt_main: '5.15'
-uhd: 4.8.0
+uhd: 4.9.0
 volk: '3.2'
