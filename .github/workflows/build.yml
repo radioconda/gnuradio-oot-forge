@@ -22,9 +22,8 @@ jobs:
           - { target: linux-aarch64, os: ubuntu-24.04-arm, test: native }
           - { target: linux-ppc64le, os: ubuntu-latest, test: skip }
           - { target: win-64, os: windows-latest, test: native }
-          # force older macos-13 to get x86_64 runners
-          - { target: osx-64, os: macos-13, test: native }
-          - { target: osx-arm64, os: macos-14, test: native }
+          - { target: osx-64, os: macos-15-intel, test: native }
+          - { target: osx-arm64, os: macos-latest, test: native }
       fail-fast: false
 
     name: ${{ matrix.target }}
