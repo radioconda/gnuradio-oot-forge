@@ -38,7 +38,7 @@ jobs:
             recipes/**/variants.yaml
 
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         with:
           token: ${{ steps.generate-token.outputs.token }}
