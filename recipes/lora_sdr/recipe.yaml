@@ -6,11 +6,11 @@ context:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/tapparelj/gr-lora_sdr.git
   git_branch: master
-  git_rev: a8143cb6162e0ee0677531aec36ca5f05fd678e0
+  git_rev: 862746dd1cf635c9c8a4bfbaa2c3a0ec3a5306c9
   base_version: "0.0.0"
-  date_str: "20250305"
+  date_str: "20260105"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
-  build: "1"
+  build: "0"
 
 package:
   name: ${{ name|lower }}
