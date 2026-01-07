@@ -6,9 +6,9 @@ context:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/bastibl/gr-rds.git
   git_branch: maint-3.10
-  git_rev: 1b8aee1210bb50bee9ed315c0b38eaeec50065cf
+  git_rev: 58facb6915fe865c4a8ae3a077c6369e8e38676c
   base_version: "3.10"
-  date_str: "20251017"
+  date_str: "20260104"
   version: ${{ base_version }}.post${{ date_str }}+g${{ git_rev[:7] }}
   build: "0"
 
