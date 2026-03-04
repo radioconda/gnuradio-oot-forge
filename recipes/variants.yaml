@@ -1,2 +1,7 @@
 channel_targets:
   - gnuradio-oot-forge main
+
+# Avoid pybind11 3.0.2 due to bug with static cast where dynamic is needed:
+# https://github.com/pybind/pybind11/issues/5989
+pybind11:
+  - 3.0.1
