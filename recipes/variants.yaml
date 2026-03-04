@@ -1,5 +1,2 @@
 channel_targets:
   - gnuradio-oot-forge main
-
-fmt:
-  - '11'
