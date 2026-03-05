@@ -5,3 +5,7 @@ channel_targets:
 # https://github.com/pybind/pybind11/issues/5989
 pybind11:
   - 3.0.1
+
+# Pin to Qwt version that is built with Qt5, because gnuradio uses Qt5
+qwt:
+  - 6.2
