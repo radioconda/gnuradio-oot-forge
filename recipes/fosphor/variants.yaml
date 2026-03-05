@@ -81,7 +81,7 @@ glew:
 - if: target_platform == 'win-64'
   then: '2.3'
 gnuradio_core: 3.10.12
-libboost_devel: '1.86'
+libboost_devel: '1.88'
 libpng: '1.6'
 numpy: '2'
 pybind11: 3.0.1

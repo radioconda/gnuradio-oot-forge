@@ -9,3 +9,11 @@ pybind11:
 # Pin to Qwt version that is built with Qt5, because gnuradio uses Qt5
 qwt:
   - 6.2
+
+# Pin boost to 1.88 because gnuradio rebuilt with qwt 6.2 was build with boost 1.88
+libboost_devel:
+  - 1.88
+libboost_headers:
+  - 1.88
+libboost_python_devel:
+  - 1.88
