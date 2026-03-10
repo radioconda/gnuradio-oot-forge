@@ -17,3 +17,9 @@ libboost_headers:
   - 1.88
 libboost_python_devel:
   - 1.88
+
+# Pin fmt and spdlog to latest so volk 3.3 is usable
+fmt:
+  - 12.1
+spdlog:
+  - 1.17

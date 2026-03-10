@@ -80,4 +80,4 @@ python:
 - 3.11.* *_cpython
 - 3.12.* *_cpython
 - 3.13.* *_cp313
-spdlog: '1.16'
+spdlog: '1.17'

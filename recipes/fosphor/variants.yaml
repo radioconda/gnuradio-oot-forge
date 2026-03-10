@@ -86,4 +86,4 @@ python:
 - 3.12.* *_cpython
 - 3.13.* *_cp313
 qt_main: '5.15'
-spdlog: '1.16'
+spdlog: '1.17'

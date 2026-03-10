@@ -71,7 +71,7 @@ cxx_compiler_version:
   then: '19'
 - if: target_platform == 'osx-arm64'
   then: '19'
-fmt: '12.0'
+fmt: '12.1'
 gnuradio_core: 3.10.12
 libboost_devel: '1.88'
 numpy: '2'
@@ -81,5 +81,5 @@ python:
 - 3.11.* *_cpython
 - 3.12.* *_cpython
 - 3.13.* *_cp313
-spdlog: '1.16'
+spdlog: '1.17'
 volk: '3.3'
