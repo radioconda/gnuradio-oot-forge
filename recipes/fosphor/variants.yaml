@@ -1,8 +1,3 @@
-MACOSX_DEPLOYMENT_TARGET:
-- if: target_platform == 'osx-64'
-  then: '10.13'
-- if: target_platform == 'osx-arm64'
-  then: '11.0'
 c_compiler:
 - if: target_platform == 'linux-64'
   then: gcc
@@ -91,4 +86,4 @@ python:
 - 3.12.* *_cpython
 - 3.13.* *_cp313
 qt_main: '5.15'
-spdlog: '1.16'
+spdlog: '1.17'
