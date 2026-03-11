@@ -10,7 +10,7 @@ context:
   base_version: "3.6"
   date_str: "20250304"
   version: ${{ base_version }}.post${{ date_str }}+g${{ git_rev[:7] }}
-  build: "3"
+  build: "4"
 
 
 package:
