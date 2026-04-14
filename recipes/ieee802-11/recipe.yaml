@@ -4,13 +4,13 @@ context:
   name: gnuradio-ieee802_11
   # update script relies on `git_url` and `git_branch` and can replace:
   #   `git_rev`, `base_version`, `date_str`, `build`
-  git_url: https://github.com/radioconda/gr-ieee802-11.git
-  git_branch: updates
-  git_rev: bf25796892c0e8ed624512de486a7ed5fd3d320e
+  git_url: https://github.com/bastibl/gr-ieee802-11.git
+  git_branch: maint-3.10
+  git_rev: 7e9c132dfb1c3bf38510a75e889c3469f29f3eec
   base_version: "0.0.0"
-  date_str: "20250915"
+  date_str: "20260108"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
-  build: "2"
+  build: "0"
 
 package:
   name: ${{ name|lower }}
