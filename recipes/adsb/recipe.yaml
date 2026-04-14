@@ -6,11 +6,11 @@ context:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/radioconda/gr-adsb.git
   git_branch: updates
-  git_rev: 9645757857deb638cc92923e4de84d0a56bb861c
+  git_rev: 63a18e7157c0556cdd597afc69e8d92ea7ff62e8
   base_version: "0.0.0"
-  date_str: "20250304"
+  date_str: "20260414"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
-  build: "4"
+  build: "0"
 
 package:
   name: ${{ name|lower }}
