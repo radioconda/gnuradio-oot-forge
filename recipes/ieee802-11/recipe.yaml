@@ -6,9 +6,9 @@ context:
   #   `git_rev`, `base_version`, `date_str`, `build`
   git_url: https://github.com/bastibl/gr-ieee802-11.git
   git_branch: maint-3.10
-  git_rev: 7e9c132dfb1c3bf38510a75e889c3469f29f3eec
+  git_rev: ad0598e4a874f4b8e1f391a1e0323e80df2b34ff
   base_version: "0.0.0"
-  date_str: "20260108"
+  date_str: "20260519"
   version: ${{ base_version }}.${{ date_str }}.dev+g${{ git_rev[:7] }}
   build: "0"
 
