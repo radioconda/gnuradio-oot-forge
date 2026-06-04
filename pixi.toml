@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/pixi/refs/heads/main/schema/schema.json
 
-[project]
+[workspace]
 authors = ["Ryan Volz <ryan.volz@gmail.com>"]
 channels = ["conda-forge"]
 description = "Conda recipes for GNU Radio Out-Of-Tree modules"
