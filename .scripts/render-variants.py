@@ -275,7 +275,7 @@ def main():
     with open(manifest_path, "rb") as f:
         manifest = tomllib.load(f)
 
-    target_platforms = manifest["project"]["platforms"]
+    target_platforms = manifest["workspace"]["platforms"]
 
     diffs = []
     for recipe_path in recipe_dir.glob("**/recipe.yaml"):
