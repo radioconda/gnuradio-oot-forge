@@ -13,15 +13,15 @@ c_compiler:
   then: vs2022
 c_compiler_version:
 - if: target_platform == 'linux-64'
-  then: '14'
+  then: '15'
 - if: target_platform == 'linux-aarch64'
-  then: '14'
+  then: '15'
 - if: target_platform == 'linux-ppc64le'
-  then: '14'
+  then: '15'
 - if: target_platform == 'osx-64'
-  then: '19'
+  then: '21'
 - if: target_platform == 'osx-arm64'
-  then: '19'
+  then: '21'
 c_stdlib:
 - if: target_platform == 'linux-64'
   then: sysroot
@@ -62,15 +62,15 @@ cxx_compiler:
   then: vs2022
 cxx_compiler_version:
 - if: target_platform == 'linux-64'
-  then: '14'
+  then: '15'
 - if: target_platform == 'linux-aarch64'
-  then: '14'
+  then: '15'
 - if: target_platform == 'linux-ppc64le'
-  then: '14'
+  then: '15'
 - if: target_platform == 'osx-64'
-  then: '19'
+  then: '21'
 - if: target_platform == 'osx-arm64'
-  then: '19'
+  then: '21'
 fmt: '12.1'
 gnuradio_core: 3.10.12
 libboost_devel: '1.88'
