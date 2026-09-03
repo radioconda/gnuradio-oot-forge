@@ -73,4 +73,4 @@ cxx_compiler_version:
   then: '21'
 gnuradio_core: 3.10.12
 libboost_devel: '1.88'
-python_min: '3.10'
+python_min: '3.11'
