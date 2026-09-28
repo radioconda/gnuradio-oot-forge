@@ -50,7 +50,7 @@ gitpython = "==3.1.62"
 setuptools_scm = "==10.3.4"
 
 [feature.render-variants.dependencies]
-conda-forge-pinning = "==2026.9.25.19.17.23"
+conda-forge-pinning = "*"
 
 [feature.render-variants.tasks]
 render-variants = "python .scripts/render-variants.py"
