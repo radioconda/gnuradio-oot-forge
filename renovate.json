@@ -4,9 +4,7 @@
     "config:recommended",
     "group:all",
     "schedule:weekly",
-    ":maintainLockFilesWeekly",
     ":approveMajorUpdates",
     ":configMigration",
-    ":ignoreUnstable"
   ]
 }
