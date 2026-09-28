@@ -2,10 +2,10 @@ import argparse
 import collections
 import difflib
 import json
+import logging
 import os
 import subprocess
 import tempfile
-import traceback
 from pathlib import Path
 
 import rich.console
@@ -13,10 +13,12 @@ import rich.markdown
 import tomllib
 import yaml
 
+logger = logging.getLogger(__name__)
+
 
 def replace_context(recipe_str, new_context_line):
     """Replace context line in recipe_str."""
-    variable, value = new_context_line.strip().split(": ")
+    variable, _value = new_context_line.strip().split(": ")
     lines = recipe_str.splitlines()
     for i, line in enumerate(lines):
         if line.strip().startswith(f"{variable}:"):
@@ -55,7 +57,7 @@ def collapse_variant_matrix(variants, extra_ignored_keys=None):
 
     # convert variant dictionaries to sets of (key, value) tuples
     # and reduce the variants by combining those that are subsets/supersets
-    common_variant_set = set((k, v) for k, v in common_values.items())
+    common_variant_set = set(common_values.items())
     variant_sets = []
     for variant in variants:
         variant_set = common_variant_set.copy()
@@ -87,6 +89,7 @@ def collapse_variant_matrix(variants, extra_ignored_keys=None):
 
     # collapse into a single dict with tuple values for the unique keys
     collapsed_variant = common_values.copy()
+
     for key in zip_keys:
         collapsed_variant[key] = tuple(uv[key] for uv in unique_variants)
 
@@ -111,7 +114,12 @@ def combine_platform_variants(platform_variants):
         unique_vals = set(platform_vals.values())
         if len(platform_vals) == num_platforms and len(unique_vals) == 1:
             # all platforms have the same value, so use that
-            combined_variant[key] = unique_vals.pop()
+            common_val = unique_vals.pop()
+            # wrap string values in single-element list so YAML output is
+            # always a list of items for each variant key
+            if isinstance(common_val, str):
+                common_val = [common_val]
+            combined_variant[key] = common_val
         else:
             # platforms have different values, or some platforms don't have the key
             selector_vals = []
@@ -131,59 +139,74 @@ def render_variants(recipe_path, target_platforms, bump_build=False, verbose=Fal
     """Render variants for recipe from conda-forge-pinning and local file."""
     print(f"Rendering variants for: {recipe_path}")
 
-    base_run_args = [
-        "rattler-build",
-        "build",
-        # "--experimental",
-        "--render-only",
-        "--recipe",
-        str(recipe_path),
-        "--ignore-recipe-variants",
-        "--variant-config",
-        str(Path(os.environ["CONDA_PREFIX"]) / "conda_build_config.yaml"),
-    ]
-    if not verbose:
-        base_run_args.insert(1, "--quiet")
-    global_variants = recipe_path.parent.parent / "variants.yaml"
-    if global_variants.exists():
-        base_run_args.extend(
-            [
-                "--variant-config",
-                str(global_variants),
-            ]
-        )
-    recipe_variants = recipe_path.parent / "recipe_variants.yaml"
-    if recipe_variants.exists():
-        base_run_args.extend(
-            [
-                "--variant-config",
-                str(recipe_variants),
-            ]
-        )
-    platform_variants = {}
-    for target_platform in target_platforms:
-        run_args = base_run_args + [
-            # don't want build platform to change depending on where this
-            # script is run, so just set it to match target platform
-            "--build-platform",
-            target_platform,
-            "--target-platform",
-            target_platform,
+    # Rewrite recipe to not include any skips, so that we render for all platforms
+    # This ensures that the variant files are fully defined, and allows
+    # rattler-build to evaluate jinja expressions correctly before building (or not)
+    with open(recipe_path) as f:
+        recipe = yaml.safe_load(f)
+    if "skip" in recipe["build"]:
+        del recipe["build"]["skip"]
+
+    with tempfile.NamedTemporaryFile(
+        mode="w+", encoding="utf-8", delete_on_close=False
+    ) as tmp_recipe_file:
+        yaml.safe_dump(recipe, tmp_recipe_file)
+        tmp_recipe_file.close()
+
+        # Now run the rattler-build rendering on the modified recipe
+        base_run_args = [
+            "rattler-build",
+            "build",
+            # "--experimental",
+            "--render-only",
+            "--recipe",
+            str(tmp_recipe_file.name),
+            "--ignore-recipe-variants",
+            "--variant-config",
+            str(Path(os.environ["CONDA_PREFIX"]) / "conda_build_config.yaml"),
         ]
-        with tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8") as outfile:
-            subprocess.run(run_args, check=True, stdout=outfile, env=os.environ)
-            outfile.seek(0)
-            content = outfile.read()
-            metadatas = json.loads(content)
-        if not isinstance(metadatas, list):
-            metadatas = [metadatas]
-        variants = [m["build_configuration"]["variant"] for m in metadatas]
-        output_names = set(m["recipe"]["package"]["name"] for m in metadatas)
-        extra_ignored_keys = [n.replace("-", "_") for n in output_names]
-        if variants:
-            platform_variants[target_platform] = collapse_variant_matrix(
-                variants, extra_ignored_keys=extra_ignored_keys
+        if not verbose:
+            base_run_args.insert(1, "--quiet")
+        global_variants = recipe_path.parent.parent / "variants.yaml"
+        if global_variants.exists():
+            base_run_args.extend(
+                [
+                    "--variant-config",
+                    str(global_variants),
+                ]
             )
+        recipe_variants = recipe_path.parent / "recipe_variants.yaml"
+        if recipe_variants.exists():
+            base_run_args.extend(
+                [
+                    "--variant-config",
+                    str(recipe_variants),
+                ]
+            )
+        platform_variants = {}
+        for target_platform in target_platforms:
+            run_args = base_run_args + [
+                # don't want build platform to change depending on where this
+                # script is run, so just set it to match target platform
+                "--build-platform",
+                target_platform,
+                "--target-platform",
+                target_platform,
+            ]
+            with tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8") as outfile:
+                subprocess.run(run_args, check=True, stdout=outfile, env=os.environ)
+                outfile.seek(0)
+                content = outfile.read()
+                metadatas = json.loads(content)
+            if not isinstance(metadatas, list):
+                metadatas = [metadatas]
+            variants = [m["build_configuration"]["variant"] for m in metadatas]
+            output_names = {m["recipe"]["package"]["name"] for m in metadatas}
+            extra_ignored_keys = [n.replace("-", "_") for n in output_names]
+            if variants:
+                platform_variants[target_platform] = collapse_variant_matrix(
+                    variants, extra_ignored_keys=extra_ignored_keys
+                )
 
     combined_variant = combine_platform_variants(platform_variants)
     variant_path = recipe_path.parent / "variants.yaml"
@@ -268,7 +291,9 @@ def main():
             if manifest_path.exists():
                 break
         else:
-            print("Cannot find pixi.toml manifest file! Specify --manifest-path")
+            logger.warning(
+                "Cannot find pixi.toml manifest file! Specify --manifest-path"
+            )
     else:
         manifest_path = args.manifest_path.resolve()
 
@@ -289,8 +314,7 @@ def main():
             if diff is not None:
                 diffs.append(diff)
         except Exception:
-            tb = traceback.format_exc()
-            print(f"Error processing {recipe_path}: {tb}")
+            logger.exception(f"Error processing {recipe_path}")
 
     summary = ""
     if diffs:
