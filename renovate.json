@@ -2,6 +2,11 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    "schedule:weekly"
+    "group:all",
+    "schedule:weekly",
+    ":maintainLockFilesWeekly",
+    ":approveMajorUpdates",
+    ":configMigration",
+    ":ignoreUnstable"
   ]
 }
