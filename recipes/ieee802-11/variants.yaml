@@ -10,7 +10,7 @@ c_compiler:
 - if: target_platform == 'osx-arm64'
   then: clang
 - if: target_platform == 'win-64'
-  then: vs2022
+  then: vs
 c_compiler_version:
 - if: target_platform == 'linux-64'
   then: '15'
@@ -22,6 +22,8 @@ c_compiler_version:
   then: '21'
 - if: target_platform == 'osx-arm64'
   then: '21'
+- if: target_platform == 'win-64'
+  then: '2022'
 c_stdlib:
 - if: target_platform == 'linux-64'
   then: sysroot
@@ -60,7 +62,7 @@ cxx_compiler:
 - if: target_platform == 'osx-arm64'
   then: clangxx
 - if: target_platform == 'win-64'
-  then: vs2022
+  then: vs
 cxx_compiler_version:
 - if: target_platform == 'linux-64'
   then: '15'
@@ -72,6 +74,8 @@ cxx_compiler_version:
   then: '21'
 - if: target_platform == 'osx-arm64'
   then: '21'
+- if: target_platform == 'win-64'
+  then: '2022'
 fmt:
 - '12.1'
 gnuradio_core:
